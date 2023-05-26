@@ -13,7 +13,7 @@ async function refreshAccessToken(token) {
     return {
       ...token,
       accessToken: refreshedToken.access_token,
-      accessTokenExpire: Date.now() + refreshedToken.expires_in * 1000, // = 1 hour as 3600 returns from spotify web api
+      accessTokenExpires: Date.now() + refreshedToken.expires_in * 1000, // = 1 hour as 3600 returns from spotify web api
       refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
       // Replace if new one came back else fall back to old refresh token
     };
@@ -27,7 +27,7 @@ async function refreshAccessToken(token) {
   }
 }
 
-export const authOptions = {
+export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     SpotifyProvider({
@@ -46,15 +46,15 @@ export const authOptions = {
       if (account && user) {
         return {
           ...token,
-          accessToken: account.accessToken,
-          refreshToken: account.refreshToken,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
           username: account.providerAccountId,
           accessTokenExpire: account.expires_at * 1000, // we are handling expiry time in milisecond hence * 1000
         };
       }
 
       // Return previous token if the access token has not expired yet
-      if (Date.now() < token.accessTokenExpire) {
+      if (Date.now() < token.accessTokenExpires) {
         console.log("EXISTING ACCESS TOKEN IS VALID");
         return token;
       }
@@ -71,5 +71,4 @@ export const authOptions = {
       return session;
     },
   },
-};
-export default NextAuth(authOptions);
+});
