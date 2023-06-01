@@ -45,7 +45,8 @@ function Center() {
         <div
           className="flex items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
-        onClick={signOut}>
+          onClick={signOut}
+        >
           <img
             className="rounded-full w-10 h-10"
             src={session?.user.image}
@@ -66,7 +67,9 @@ function Center() {
         />
         <div>
           <p>PLAYLIST</p>
-          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">{playlist?.name}</h1>
+          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
+            {playlist?.name}
+          </h1>
         </div>
       </section>
 

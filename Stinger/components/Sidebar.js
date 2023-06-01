@@ -8,6 +8,7 @@ import {
   SearchIcon,
 } from "@heroicons/react/outline";
 import { HeartIcon } from "@heroicons/react/solid";
+import { data } from "autoprefixer";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -20,11 +21,13 @@ function Sidebar() {
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getUserPlaylists().then((data) => {
+      spotifyApi.getUserPlaylists({ limit: 50, offset: 1 }).then((data) => {
         setPlaylists(data.body.items);
       });
     }
   }, [session, spotifyApi]);
+
+  console.log(playlists);
 
   return (
     <div
@@ -60,15 +63,23 @@ function Sidebar() {
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
         {playlists.map((playlist) => (
-          <p
-            key={playlist.id}
-            onClick={() => {
-              setPlaylistId(playlist.id);
-            }}
-            className="cursor-pointer hover:text-white"
-          >
-            {playlist.name}
-          </p>
+          <div className="flex items-center space-x-3">
+            <img
+              className="w-10 h-10 shadow-md rounded-sm"
+              src={playlist?.images?.[0].url}
+              alt=""
+            />
+            <p
+              key={playlist.id}
+              onClick={() => {
+                setPlaylistId(playlist.id);
+                console.log(playlist.id);
+              }}
+              className="cursor-pointer hover:text-white truncate"
+            >
+              {playlist.name}
+            </p>
+          </div>
         ))}
       </div>
     </div>
