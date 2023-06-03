@@ -10,6 +10,7 @@ import {
 import { HeartIcon } from "@heroicons/react/solid";
 import { data } from "autoprefixer";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -18,6 +19,15 @@ function Sidebar() {
   const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState([]);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const router = useRouter();
+
+  const navigateHome = () => {
+    router.push("/home");
+  };
+
+  const navigatePlaylist = () => {
+    router.push("/");
+  };
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
@@ -36,7 +46,10 @@ function Sidebar() {
     hidden md:inline-flex pb-36"
     >
       <div className="space-y-4">
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={navigateHome}
+        >
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
         </button>
@@ -74,6 +87,7 @@ function Sidebar() {
               onClick={() => {
                 setPlaylistId(playlist.id);
                 console.log(playlist.id);
+                navigatePlaylist;
               }}
               className="cursor-pointer hover:text-white truncate"
             >
