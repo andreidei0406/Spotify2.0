@@ -1,13 +1,13 @@
-import HomeCenter from "@/components/HomeCenter";
+import Center from "@/components/Center";
 import Player from "@/components/Player";
 import Sidebar from "@/components/Sidebar";
 
-function Home() {
+function Playlist() {
   return (
     <div className="bg-black h-screen overflow-hidden">
       <main className="flex">
         <Sidebar />
-        <HomeCenter />
+        <Center />
       </main>
 
       <div className="sticky bottom-0">
@@ -17,4 +17,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Playlist;

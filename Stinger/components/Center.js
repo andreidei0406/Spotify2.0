@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import Songs from "./Songs";
+import { useRouter } from "next/router";
 
 const colors = [
   "from-indigo-500",
@@ -15,29 +16,35 @@ const colors = [
   "from-yellow-500",
   "from-pink-500",
   "from-purple-500",
+  "from-zinc-500",
+  "from-amber-500",
+  "from-emerald-500",
+  "from-sky-500",
+  "from-teal-500",
+  "from-cyan-500",
+  "from-rose-500",
+  "from-fuchsia-500",
+  "from-lime-500",
 ];
 
 function Center() {
+  const router = useRouter();
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
   const [color, setColor] = useState(null);
-  const playlistId = useRecoilValue(playlistIdState);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
-
   useEffect(() => {
     setColor(shuffle(colors).pop());
-  }, [playlistId]);
+  }, [router.query.id]);
 
   useEffect(() => {
-    spotifyApi
-      .getPlaylist(playlistId)
-      .then((data) => {
-        setPlaylist(data.body);
-      })
-      .catch((err) => console.log("Something went wrong!", err));
-  }, [spotifyApi, playlistId]);
-
-  console.log(playlist);
+      spotifyApi
+        .getPlaylist(router.query.id)
+        .then((data) => {
+          setPlaylist(data.body);
+        })
+        .catch((err) => console.log("Something went wrong!", err));
+  }, [spotifyApi, session, router.query.id]);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">

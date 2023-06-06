@@ -1,4 +1,5 @@
 import Center from "@/components/Center";
+import HomeCenter from "@/components/HomeCenter";
 import Player from "@/components/Player";
 import Sidebar from "@/components/Sidebar";
 import { getSession } from "next-auth/react";
@@ -7,7 +8,7 @@ export default function Home() {
     <div className="bg-black h-screen overflow-hidden">
       <main className="flex">
         <Sidebar />
-        <Center />
+        <HomeCenter />
       </main>
 
       <div className="sticky bottom-0">

@@ -21,14 +21,6 @@ function Sidebar() {
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const router = useRouter();
 
-  const navigateHome = () => {
-    router.push("/home");
-  };
-
-  const navigatePlaylist = () => {
-    router.push("/");
-  };
-
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists({ limit: 50, offset: 1 }).then((data) => {
@@ -37,8 +29,6 @@ function Sidebar() {
     }
   }, [session, spotifyApi]);
 
-  console.log(playlists);
-
   return (
     <div
       className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
@@ -46,10 +36,7 @@ function Sidebar() {
     hidden md:inline-flex pb-36"
     >
       <div className="space-y-4">
-        <button
-          className="flex items-center space-x-2 hover:text-white"
-          onClick={navigateHome}
-        >
+        <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
         </button>
@@ -86,8 +73,10 @@ function Sidebar() {
               key={playlist.id}
               onClick={() => {
                 setPlaylistId(playlist.id);
-                console.log(playlist.id);
-                navigatePlaylist;
+                router.push({
+                  pathname: "/playlist/[id]",
+                  query: { id: playlist.id },
+                });
               }}
               className="cursor-pointer hover:text-white truncate"
             >
