@@ -36,7 +36,12 @@ function Sidebar() {
     hidden md:inline-flex pb-36"
     >
       <div className="space-y-4">
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => {
+            router.replace('/');
+          }}
+        >
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
         </button>
@@ -51,7 +56,7 @@ function Sidebar() {
         <hr className="border-t-[0.1px] border-gray-900" />
         <button className="flex items-center space-x-2 hover:text-white">
           <PlusCircleIcon className="h-5 w-5" />
-          <p>Create Playelist</p>
+          <p>Create Playlist</p>
         </button>
         <button className="flex items-center space-x-2 text-blue-500 hover:text-white">
           <HeartIcon className="h-5 w-5" />

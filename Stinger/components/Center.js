@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
@@ -38,12 +38,12 @@ function Center() {
   }, [router.query.id]);
 
   useEffect(() => {
-      spotifyApi
-        .getPlaylist(router.query.id)
-        .then((data) => {
-          setPlaylist(data.body);
-        })
-        .catch((err) => console.log("Something went wrong!", err));
+    spotifyApi
+      .getPlaylist(router.query.id)
+      .then((data) => {
+        setPlaylist(data.body);
+      })
+      .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session, router.query.id]);
 
   return (
@@ -61,6 +61,14 @@ function Center() {
           />
           <h2>{session?.user.name}</h2>
           <ChevronDownIcon className="h-5 w-5" />
+        </div>
+      </header>
+      <header className="absolute top-5 left-8 ml-60">
+        <div className="flex items-center bg-black space-x-3 opacity-90 
+        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white">
+          <ChevronLeftIcon className="h-10 w-10" onClick={()=>{
+            router.back();
+          }} />
         </div>
       </header>
       <section
