@@ -3,7 +3,7 @@ import useSpotify from "@/hooks/useSpotify";
 import { millisToMinutesAndSeconds } from "@/lib/time";
 import { useRecoilState } from "recoil";
 
-function Song({ order, track }) {
+function Song({ order, track, albumTrack }) {
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
@@ -11,11 +11,17 @@ function Song({ order, track }) {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
   const playSong = () => {
-    setCurrentTrackId(track.track.id);
+    setCurrentTrackId(track?.track.id ?? albumTrack.id);
     setIsPlaying(true);
-    spotifyApi.play({
-      uris: [track.track.uri],
-    });
+    if(albumTrack){
+      spotifyApi.play({
+        uris: [albumTrack?.uri]
+      });
+    } else{
+      spotifyApi.play({
+        uris: [track?.track.uri]
+      });
+    }
   };
 
   return (
@@ -28,18 +34,18 @@ function Song({ order, track }) {
         <p>{order + 1}</p>
         <img
           className="h-10 w-10"
-          src={track.track.album.images?.[0]?.url}
+          src={track?.track.album.images?.[0]?.url ?? 'https://w7.pngwing.com/pngs/803/536/png-transparent-musical-note-icon-music-angle-white-text-thumbnail.png'}
           alt=""
         />
         <div>
-          <p className="w-36 lg:w-64 truncate text-white">{track.track.name}</p>
-          <p className="w-40">{track.track.artists[0].name}</p>
+          <p className="w-36 lg:w-64 truncate text-white">{track?.track.name ?? albumTrack.name}</p>
+          <p className="w-40">{track?.track.artists[0].name ?? albumTrack.artists[0].name}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between ml-auto md:ml-0">
-        <p className="w-40 hidden md:inline">{track.track.album.name}</p>
-        <p>{millisToMinutesAndSeconds(track.track.duration_ms)}</p>
+        <p className="w-40 hidden md:inline">{track?.track.album.name ?? albumTrack.name}</p>
+        <p>{millisToMinutesAndSeconds(track?.track.duration_ms ?? albumTrack.duration_ms)}</p>
       </div>
     </div>
   );

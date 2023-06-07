@@ -7,6 +7,7 @@ import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import Songs from "./Songs";
 import { useRouter } from "next/router";
+import { albumState } from "@/atoms/albumAtoms";
 
 const colors = [
   "from-indigo-500",
@@ -27,24 +28,26 @@ const colors = [
   "from-lime-500",
 ];
 
-function Center() {
+function CenterAlbum() {
   const router = useRouter();
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
   const [color, setColor] = useState(null);
-  const [playlist, setPlaylist] = useRecoilState(playlistState);
+  const [album, setAlbum] = useRecoilState(albumState);
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [router.query.id]);
 
   useEffect(() => {
     spotifyApi
-      .getPlaylist(router.query.id)
+      .getAlbum(router.query.id)
       .then((data) => {
-        setPlaylist(data.body);
+        setAlbum(data.body);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session, router.query.id]);
+
+  console.log(album);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -77,22 +80,22 @@ function Center() {
       >
         <img
           className="w-44 h-44 shadow-2xl"
-          src={playlist?.images?.[0].url}
+          src={album?.images?.[0].url}
           alt=""
         />
         <div>
-          <p>PLAYLIST</p>
+          <p>ALBUM</p>
           <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
-            {playlist?.name}
+            {album?.name}
           </h1>
         </div>
       </section>
 
       <div>
-        <Songs isAlbum={false}/>
+        <Songs isAlbum={true}/>
       </div>
     </div>
   );
 }
 
-export default Center;
+export default CenterAlbum;

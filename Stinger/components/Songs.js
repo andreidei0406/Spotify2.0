@@ -4,18 +4,24 @@ import Song from "./Song";
 import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import { PlayIcon } from "@heroicons/react/solid";
 import useSpotify from "@/hooks/useSpotify";
+import { albumState } from "@/atoms/albumAtoms";
+import { useEffect } from "react";
+import { random } from "lodash";
 
-function Songs() {
+function Songs({isAlbum}) {
   const spotifyApi = useSpotify();
   const playlist = useRecoilValue(playlistState);
+  const album = useRecoilValue(albumState)
+
+  const content = isAlbum ? useRecoilValue(albumState) : useRecoilValue(playlistState);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
   const shufflePlay = () => {
-    const randomSong = Math.floor(Math.random() * playlist?.tracks.items.length);
-    setCurrentTrackId(playlist?.tracks.items[randomSong].track.id);
+    const randomSong = Math.floor(isAlbum ? Math.random() * album?.tracks.items.length : Math.random() * playlist?.tracks.items.length);
+    setCurrentTrackId(isAlbum ? album?.tracks.items[randomSong].id : playlist?.tracks.items[randomSong].track.id);
     setIsPlaying(true);
     spotifyApi.play({
       uris: [playlist?.tracks.items[randomSong].track.uri],
@@ -28,9 +34,16 @@ function Songs() {
         <PlayIcon className="button w-14 h-14 text-green-500 mr-1" onClick={shufflePlay}/>
         <h2 className="text-green-500">Shuffle Play</h2>
       </div>
-      {playlist?.tracks.items.map((track, i) => (
+      {isAlbum ? (
+        album?.tracks.items.map((track, i) => (
+          <Song key={track.id} albumTrack={track} order={i}/>
+        ))
+      ) : 
+      playlist?.tracks.items.map((track, i) => (
         <Song key={track.track.id} track={track} order={i} />
       ))}
+      
+      
     </div>
   );
 }
