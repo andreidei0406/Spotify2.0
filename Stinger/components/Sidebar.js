@@ -39,7 +39,7 @@ function Sidebar() {
         <button
           className="flex items-center space-x-2 hover:text-white"
           onClick={() => {
-            router.replace('/');
+            router.replace("/");
           }}
         >
           <HomeIcon className="h-5 w-5" />
@@ -58,7 +58,12 @@ function Sidebar() {
           <PlusCircleIcon className="h-5 w-5" />
           <p>Create Playlist</p>
         </button>
-        <button className="flex items-center space-x-2 text-blue-500 hover:text-white">
+        <button
+          className="flex items-center space-x-2 text-blue-500 hover:text-white"
+          onClick={() => {
+            router.replace("/liked");
+          }}
+        >
           <HeartIcon className="h-5 w-5" />
           <p>Liked songs</p>
         </button>

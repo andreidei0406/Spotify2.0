@@ -1,7 +1,7 @@
 import { playlistIdState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { shuffle } from "lodash";
+import { random, shuffle } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ const colors = [
   "from-pink-500",
   "from-purple-500",
 ];
+const offset = random(50, false);
 
 function HomeCenter() {
   const router = useRouter();
@@ -23,12 +24,11 @@ function HomeCenter() {
   const spotifyApi = useSpotify();
   const [newAlbums, setNewAlbums] = useState([]);
   const [featuredPlaylists, setFeaturedPlaylists] = useState([]);
-
-  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getNewReleases({ limit: 6 }).then((data) => {
+      spotifyApi.getNewReleases({ limit: 6, offset: offset }).then((data) => {
         setNewAlbums(data.body.albums.items);
       });
     }
@@ -42,8 +42,24 @@ function HomeCenter() {
     }
   }, [session, spotifyApi]);
 
-  console.log(newAlbums);
-  console.log(featuredPlaylists);
+  useEffect(() => {
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi
+        .getPlaylistsForCategory("chill", { limit: 6, offset: offset })
+        .then((data) => {
+          const playlists = [];
+          data.body.playlists.items.forEach((item) => {
+            playlists.push(item);
+          });
+          playlists.forEach((item)=>{
+            item = item.description.split("<")[0];
+          })
+          setRecommendations(playlists);
+        });
+    }
+  }, [session, spotifyApi]);
+
+  console.log(recommendations)
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -88,10 +104,10 @@ function HomeCenter() {
                   alt=""
                 />
                 <div>
-                  <p>Album</p>
                   <h1 className="text-md md:text-lg xl:text-xl font-bold">
                     {album?.name}
                   </h1>
+                  <p>New album by {album?.artists?.[0].name}</p>
                 </div>
               </div>
             ))}
@@ -120,34 +136,47 @@ function HomeCenter() {
                   alt=""
                 />
                 <div>
-                  <p>Playlist</p>
                   <h1 className="text-md md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
+                  <p>{playlist?.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </section>
-        {/* <section className="">
+        <div className="mt-5 ml-8">
+          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
+            Take some time and chill
+          </h1>
+        </div>
+        <section className="">
           <div className="grid grid-cols-3 space-x-4 space-y-4 py-4 px-8">
-            {featuredPlaylists.map((playlist) => (
-              <div className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer">
+            {recommendations.map((playlist) => (
+              <div
+                className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
+                onClick={() => {
+                  router.push({
+                    pathname: "/playlist/[id]",
+                    query: { id: playlist.id },
+                  });
+                }}
+              >
                 <img
                   className="w-32 h-32 shadow-2xl rounded-sm"
                   src={playlist?.images?.[0].url}
                   alt=""
                 />
                 <div>
-                  <p>Playlist</p>
                   <h1 className="text-md md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
+                  <p>{playlist?.description}</p>
                 </div>
               </div>
             ))}
           </div>
-        </section> */}
+        </section>
       </div>
       <section className="flex items-end space-x-7 bg-gradient-to-b  h-80 text-white p-8"></section>
     </div>

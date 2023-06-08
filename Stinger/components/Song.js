@@ -24,6 +24,8 @@ function Song({ order, track, albumTrack }) {
     }
   };
 
+  console.log(albumTrack);
+
   return (
     <div
       className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900

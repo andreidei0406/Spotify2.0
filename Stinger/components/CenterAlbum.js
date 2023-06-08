@@ -88,6 +88,7 @@ function CenterAlbum() {
           <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
             {album?.name}
           </h1>
+          <p>{album?.artists?.[0].name}</p>
         </div>
       </section>
 
