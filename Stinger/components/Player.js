@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { debounce } from "lodash";
+import { queueIdState } from "@/atoms/queueAtoms";
 
 function Player() {
   const spotifyApi = useSpotify();
@@ -24,6 +25,7 @@ function Player() {
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [volume, setVolume] = useState(50);
+  const [queue, setQueue] = useRecoilState(queueIdState);
 
   const songInfo = useSongInfo();
 
@@ -52,6 +54,48 @@ function Player() {
     });
   };
 
+  const playSong = (id) => {
+    setCurrentTrackId(id);
+    setIsPlaying(true);
+      spotifyApi.play({
+        uris: ["spotify:track:"+id]
+      });
+  };
+
+  const skipNext = () => {
+    spotifyApi.skipToNext().then(
+      function () {
+        const index = queue.indexOf(currentTrackId);
+        if(index + 1 > queue.length){
+          setCurrentTrackId(queue[0]);
+          setIsPlaying(false);
+        } else{
+          playSong(queue[index+1]);
+        }
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    );
+  };
+
+  const skipPrevious = () => {
+    spotifyApi.skipToPrevious().then(
+      function () {
+        const index = queue.indexOf(currentTrackId);
+        if(index - 1 < 0){
+          setCurrentTrackId(queue[0]);
+        } else{
+          playSong(queue[index-1]);
+        }
+
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    );
+  };
+
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !currentTrackId) {
       //fetch song info
@@ -73,6 +117,8 @@ function Player() {
     []
   );
 
+    console.log(queue);
+
   return (
     <div
       className="h-24 bg-gradient-to-b from-black to-gray-900 text-white
@@ -91,22 +137,29 @@ function Player() {
         </div>
       </div>
       {/* center */}
-      <div className="flex items-center justify-evenly">
-        <SwitchHorizontalIcon className="button" />
-        <RewindIcon
-          className="button"
-          onClick={() => spotifyApi.skipToPrevious()}
-        />
-        {isPlaying ? (
-          <PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />
-        ) : (
-          <PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />
-        )}
-        <FastForwardIcon
-          className="button"
-          onClick={() => spotifyApi.skipToNext()}
-        />
-        <ReplyIcon className="button" />
+      <div className="mt-5">
+        <div className="flex items-center justify-evenly">
+          <SwitchHorizontalIcon className="button" />
+          <RewindIcon className="button" onClick={skipPrevious} />
+          {isPlaying ? (
+            <PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />
+          ) : (
+            <PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />
+          )}
+          <FastForwardIcon className="button" onClick={skipNext} />
+          <ReplyIcon className="button" />
+        </div>
+        <div className="flex flex-col py-3">
+          <input
+            className="w-full h-1 bg-green-400 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
+            type="range"
+            // value={0}
+            // value={track}
+            // onChange={}
+            min={0}
+            max={100} // track.duration
+          />
+        </div>
       </div>
       {/* right */}
       <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">

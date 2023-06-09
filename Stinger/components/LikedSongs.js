@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Songs from "./Songs";
+import { queueIdState } from "@/atoms/queueAtoms";
 
 const colors = [
   "from-indigo-500",
@@ -18,6 +19,8 @@ const colors = [
 const i = 0;
 
 function LikedSongs() {
+  const [queue, setQueue] = useRecoilState(queueIdState);
+
   const router = useRouter();
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
@@ -64,7 +67,7 @@ function LikedSongs() {
     spotifyApi
       .getMySavedTracks({ limit: 50, offset: random(700, false) })
       .then((data) => {
-        setLiked(data.body)
+        setLiked(data.body.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session]);

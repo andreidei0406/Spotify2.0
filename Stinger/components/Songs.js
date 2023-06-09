@@ -5,8 +5,9 @@ import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import { PlayIcon } from "@heroicons/react/solid";
 import useSpotify from "@/hooks/useSpotify";
 import { albumState } from "@/atoms/albumAtoms";
-import { random } from "lodash";
+import { random, shuffle } from "lodash";
 import { likeState, likedState } from "@/atoms/likedAtoms";
+import { queueIdState } from "@/atoms/queueAtoms";
 
 function Songs({ isAlbum, isLiked }) {
   const spotifyApi = useSpotify();
@@ -15,6 +16,7 @@ function Songs({ isAlbum, isLiked }) {
   const liked = useRecoilValue(likedState);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
+  const [queue, setQueue] = useRecoilState(queueIdState);
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
@@ -45,6 +47,7 @@ function Songs({ isAlbum, isLiked }) {
         uris: [playlist?.tracks.items[randomSong].track.uri],
       });
     }
+    setQueue(shuffle(queue));
   };
 
   return (
@@ -61,7 +64,7 @@ function Songs({ isAlbum, isLiked }) {
             <Song key={track.id} albumTrack={track} order={i} />
           ))
         : isLiked
-        ? liked?.items.map((track, i) => (
+        ? liked?.map((track, i) => (
             <Song key={track.track.id} track={track} order={i} />
           ))
         : playlist?.tracks.items.map((track, i) => (
