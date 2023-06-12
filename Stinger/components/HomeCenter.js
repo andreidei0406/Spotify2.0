@@ -87,7 +87,7 @@ function HomeCenter() {
       </header>
       <div>
         <section className="">
-          <div className="grid grid-cols-3 space-x-4 space-y-4 py-4 px-8">
+          <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {newAlbums.map((album) => (
               <div
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
@@ -119,7 +119,7 @@ function HomeCenter() {
           </h1>
         </div>
         <section className="">
-          <div className="grid grid-cols-3 space-x-4 space-y-4 py-4 px-8">
+          <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {featuredPlaylists.map((playlist) => (
               <div
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
@@ -151,7 +151,7 @@ function HomeCenter() {
           </h1>
         </div>
         <section className="">
-          <div className="grid grid-cols-3 space-x-4 space-y-4 py-4 px-8">
+          <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {recommendations.map((playlist) => (
               <div
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"

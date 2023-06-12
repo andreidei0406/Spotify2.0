@@ -32,7 +32,7 @@ function Sidebar() {
   return (
     <div
       className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
-    overflow-y-scroll scrollbar-hide h-screen sm:max-w-[15rem] lg:max-w-[20rem]
+    overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[15rem] lg:max-w-[20rem]
     hidden md:inline-flex pb-36"
     >
       <div className="space-y-4">
@@ -45,7 +45,9 @@ function Sidebar() {
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
         </button>
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button className="flex items-center space-x-2 hover:text-white" onClick={() => {
+            router.replace("/search");
+          }}>
           <SearchIcon className="h-5 w-5" />
           <p>Search</p>
         </button>

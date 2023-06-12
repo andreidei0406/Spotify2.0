@@ -1,4 +1,6 @@
-import { albumIdState } from "@/atoms/albumAtoms";
+import { albumIdState, albumState } from "@/atoms/albumAtoms";
+import { likedState } from "@/atoms/likedAtoms";
+import { playlistState } from "@/atoms/playlistAtoms";
 import { queueIdState } from "@/atoms/queueAtoms";
 import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import useSpotify from "@/hooks/useSpotify";
@@ -16,6 +18,9 @@ function Song({ order, track, albumTrack }) {
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [image, setImage] = useState(null);
+  const playlist = useRecoilValue(playlistState);
+  const album = useRecoilValue(albumState);
+  const liked = useRecoilValue(likedState);
   const playSong = () => {
     setCurrentTrackId(track?.track.id ?? albumTrack.id);
     setIsPlaying(true);
@@ -23,6 +28,11 @@ function Song({ order, track, albumTrack }) {
       spotifyApi.play({
         uris: [albumTrack?.uri],
       });
+      const songsUri =[];
+      album.tracks.items.map((track) =>{
+        songsUri.push(track.id);
+      })
+      setQueue(songsUri);
     } else {
       spotifyApi.play({
         uris: [track?.track.uri],
@@ -35,7 +45,6 @@ function Song({ order, track, albumTrack }) {
       spotifyApi
       .getAlbum(router.query.id)
       .then((data) => {
-        console.log(data.body);
         setImage(data.body.images?.[0]?.url);
       })
       .catch((err) =>
@@ -44,7 +53,8 @@ function Song({ order, track, albumTrack }) {
     }
   });
 
-  console.log(router.query.id);
+  console.log(queue);
+
   return (
     <div
       className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900

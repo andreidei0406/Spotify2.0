@@ -70,7 +70,7 @@ function LikedSongs() {
         setLiked(data.body.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
-  }, [spotifyApi, session]);
+  }, [spotifyApi]);
 
   console.log(liked);
 
