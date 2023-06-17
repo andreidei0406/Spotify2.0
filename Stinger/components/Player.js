@@ -42,7 +42,7 @@ function Player() {
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
           setIsPlaying(data.body?.is_playing);
         });
-      });
+      }).catch((err) => console.error("Can't return current playing track:", err));
     }
   };
 
@@ -130,7 +130,7 @@ function Player() {
   useEffect(() => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
       setSeeker(data.body.progress_ms);
-    });
+    }).catch((err) => console.error("Can't seek: ", err));
   }, [seeker, isPlaying, session, currentTrackId, spotifyApi]);
 
   console.log(seeker);
