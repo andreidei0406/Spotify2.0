@@ -1,14 +1,9 @@
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
-import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { shuffle } from "lodash";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
-import Songs from "./Songs";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { shuffle } from "lodash";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { albumState } from "@/atoms/albumAtoms";
-import { categoriesState } from "@/atoms/categoriesAtoms";
+import { useEffect, useState } from "react";
 
 const colors = [
   "from-indigo-500",
