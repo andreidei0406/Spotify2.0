@@ -104,7 +104,7 @@ function CenterCategory() {
         <section className="">
           <div className="grid grid-cols-9 gap-7 grid-flow-row-dense">
             {playlists?.items?.map((playlist) => (
-              <div className="text-xs md:text-sm xl:text-md bg-gray-900 px-3 py-3 hover:bg-gray-700 cursor-pointer rounded-md">
+              <div key={playlist.id} className="text-xs md:text-sm xl:text-md bg-gray-900 px-3 py-3 hover:bg-gray-700 cursor-pointer rounded-md">
                 <div
                   className="relative items-center rounded-lg"
                   onClick={() => {
