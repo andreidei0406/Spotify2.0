@@ -75,6 +75,7 @@ function SearchComponent() {
             { search ==='' ? 
             categories?.map((category) => (
               <div
+                key={category.id}
                 className="relative items-center hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
