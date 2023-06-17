@@ -17,6 +17,7 @@ import { useRecoilState } from "recoil";
 import { debounce } from "lodash";
 import { queueIdState } from "@/atoms/queueAtoms";
 import { seekerState } from "@/atoms/seekerAtoms";
+import { durationState } from "@/atoms/durationAtoms";
 
 function Player() {
   const spotifyApi = useSpotify();
@@ -28,7 +29,7 @@ function Player() {
   const [volume, setVolume] = useState(50);
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [seeker, setSeeker] = useRecoilState(seekerState);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useRecoilState(durationState);
   const songInfo = useSongInfo();
 
   const fetchCurrentSong = () => {
@@ -37,6 +38,7 @@ function Player() {
         console.log("Now playing: ", data.body?.item);
         setCurrentTrackId(data.body?.item.id);
         setDuration(data.body.item.duration_ms);
+        console.log(duration);
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
           setIsPlaying(data.body?.is_playing);
         });
@@ -45,8 +47,10 @@ function Player() {
   };
 
   const handlePlayPause = () => {
+    setSeeker(0);
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
       if (data.body.is_playing) {
+        console.log(data.body);
         spotifyApi.pause();
         setIsPlaying(false);
       } else {
@@ -58,52 +62,47 @@ function Player() {
 
   const playSong = (id) => {
     setCurrentTrackId(id);
-    setIsPlaying(true);
     spotifyApi.play({
       uris: ["spotify:track:" + id],
     });
+    setIsPlaying(true);
   };
 
   const skipNext = () => {
-    // spotifyApi.skipToNext().then(
-    //   function () {
-    const index = queue.indexOf(currentTrackId);
+    let index = 0;
+    queue.forEach((element, i) => {
+      if (element.id === currentTrackId) {
+        index = i;
+      }
+    });
     if (index + 1 > queue.length) {
-      setCurrentTrackId(queue[0]);
+      setCurrentTrackId(queue[0].id);
+      setDuration(queue[0].duration_ms);
+      spotifyApi.pause();
       setIsPlaying(false);
     } else {
-      playSong(queue[index + 1]);
+      setCurrentTrackId(queue[index + 1].id);
+      setDuration(queue[index + 1].duration_ms);
+      playSong(queue[index + 1].id);
     }
-    //   },
-    //   function (err) {
-    //     console.log("Something went wrong!", err);
-    //   }
-    // );
   };
 
   const skipPrevious = () => {
-    // spotifyApi.skipToPrevious().then(
-    //   function () {
     const index = queue.indexOf(currentTrackId);
     if (index - 1 < 0) {
       setCurrentTrackId(queue[0]);
+      setDuration(queue[0].duration_ms);
     } else {
-      playSong(queue[index - 1]);
+      setCurrentTrackId(queue[index - 1].id);
+      setDuration(queue[index - 1].duration_ms);
+      playSong(queue[index - 1].id);
     }
-
-    // },
-    //   function (err) {
-    //     console.log("Something went wrong!", err);
-    //   }
-    // );
   };
 
   const seekTo = (position) => {
     spotifyApi
       .seek(position)
-      .then((data) => {
-        console.log(data);
-      })
+      .then(setSeeker(position))
       .catch((err) => console.log("Couldn't seek", err));
   };
 
@@ -114,17 +113,6 @@ function Player() {
       setVolume(50);
     }
   });
-
-  useEffect(() => {
-    if (isPlaying) {
-      spotifyApi.getMyCurrentPlaybackState().then((data) => {
-        setSeeker(data.body.progress_ms);
-        if (seeker >= duration) {
-          setSeeker(0);
-        }
-      });
-    }
-  }, [seeker, isPlaying]);
 
   useEffect(() => {
     if (volume > 0 && volume < 100) {
@@ -139,8 +127,13 @@ function Player() {
     []
   );
 
-  console.log(seeker);
+  useEffect(() => {
+    spotifyApi.getMyCurrentPlaybackState().then((data) => {
+      setSeeker(data.body.progress_ms);
+    });
+  }, [seeker, isPlaying, session, currentTrackId, spotifyApi]);
 
+  console.log(seeker);
   return (
     <div
       className="h-24 bg-gradient-to-b from-black to-gray-900 text-white
@@ -173,11 +166,11 @@ function Player() {
         </div>
         <div className="flex flex-col py-3">
           <input
-            className="w-full h-1 bg-green-400 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
+            // className=" w-full h-1 bg-green-400 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
+            className="::-webkit-slider-thumb ::-webkit-slider-runnable-track w-full h-1 bg-green-400 rounded-lg cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
             type="range"
             value={seeker}
             onChange={(e) => {
-              setSeeker(Number(e.target.value))
               seekTo(Number(e.target.value));
             }}
             min={0}
