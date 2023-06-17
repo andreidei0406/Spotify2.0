@@ -8,8 +8,12 @@ import { albumState } from "@/atoms/albumAtoms";
 import { random, shuffle } from "lodash";
 import { likeState, likedState } from "@/atoms/likedAtoms";
 import { queueIdState } from "@/atoms/queueAtoms";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 function Songs({ isAlbum, isLiked }) {
+  const { data: session, status } = useSession();
+
   const spotifyApi = useSpotify();
   const playlist = useRecoilValue(playlistState);
   const album = useRecoilValue(albumState);
@@ -38,16 +42,30 @@ function Songs({ isAlbum, isLiked }) {
       spotifyApi.play({
         uris: [album?.tracks.items[randomSong].uri],
       });
+      const songs = [];
+      album.tracks.items.map((item) => {
+        songs.push(item);
+      });
+      setQueue(shuffle(songs));
     } else if (isLiked) {
       spotifyApi.play({
         uris: [liked?.items[randomSong].track.uri],
       });
+      const songs = [];
+      liked.items.map((item) => {
+        songs.push(item.track);
+      });
+      setQueue(shuffle(songs));
     } else {
       spotifyApi.play({
         uris: [playlist?.tracks.items[randomSong].track.uri],
       });
+      const songs = [];
+      playlist.tracks.items.map((item) => {
+        songs.push(item.track);
+      });
+      setQueue(shuffle(songs));
     }
-    setQueue(shuffle(queue));
   };
 
   return (
@@ -65,10 +83,10 @@ function Songs({ isAlbum, isLiked }) {
           ))
         : isLiked
         ? liked?.map((track, i) => (
-            <Song key={track.track.id} track={track} order={i} />
+            <Song key={track.track.id} isLiked='true' track={track} order={i} />
           ))
         : playlist?.tracks.items.map((track, i) => (
-            <Song key={track.track.id} track={track} order={i} />
+            <Song key={track.track.id} isPlaylist='true' track={track} order={i} />
           ))}
     </div>
   );

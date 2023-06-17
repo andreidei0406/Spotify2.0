@@ -1,4 +1,5 @@
 import { albumIdState, albumState } from "@/atoms/albumAtoms";
+import { durationState } from "@/atoms/durationAtoms";
 import { likedState } from "@/atoms/likedAtoms";
 import { playlistState } from "@/atoms/playlistAtoms";
 import { queueIdState } from "@/atoms/queueAtoms";
@@ -10,13 +11,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-function Song({ order, track, albumTrack }) {
+function Song({ order, track, albumTrack, isLiked, isPlaylist }) {
   const router = useRouter();
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+  const [duration, setDuration] = useRecoilState(durationState);
   const [image, setImage] = useState(null);
   const playlist = useRecoilValue(playlistState);
   const album = useRecoilValue(albumState);
@@ -30,13 +32,30 @@ function Song({ order, track, albumTrack }) {
       });
       const songsUri =[];
       album.tracks.items.map((track) =>{
-        songsUri.push(track.id);
+        songsUri.push(track);
       })
+      setDuration(albumTrack?.duration_ms);
+      setQueue(songsUri);
+    } else if(isLiked) {
+      spotifyApi.play({
+        uris: [track?.track.uri],
+      });
+      const songsUri =[];
+      liked.forEach(element => {
+        songsUri.push(element.track);
+      });
+      setDuration(track?.track.duration_ms);
       setQueue(songsUri);
     } else {
       spotifyApi.play({
         uris: [track?.track.uri],
       });
+      const songsUri =[];
+      playlist.tracks.items.map((track) =>{
+        songsUri.push(track.track);
+      })
+      setDuration(track?.track.duration_ms);
+      setQueue(songsUri);
     }
   };
 
@@ -52,8 +71,6 @@ function Song({ order, track, albumTrack }) {
       );
     }
   });
-
-  console.log(queue);
 
   return (
     <div
