@@ -8,7 +8,6 @@ import {
   SearchIcon,
 } from "@heroicons/react/outline";
 import { HeartIcon } from "@heroicons/react/solid";
-import { data } from "autoprefixer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -45,13 +44,16 @@ function Sidebar() {
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
         </button>
-        <button className="flex items-center space-x-2 hover:text-white" onClick={() => {
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={() => {
             router.replace("/search");
-          }}>
+          }}
+        >
           <SearchIcon className="h-5 w-5" />
           <p>Search</p>
         </button>
-        
+
         <hr className="border-t-[0.1px] border-gray-900" />
         <button className="flex items-center space-x-2 hover:text-white">
           <PlusCircleIcon className="h-5 w-5" />
@@ -72,14 +74,13 @@ function Sidebar() {
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
         {playlists.map((playlist) => (
-          <div className="flex items-center space-x-3">
+          <div key={playlist.id} className="flex items-center space-x-3">
             <img
               className="w-10 h-10 shadow-md rounded-sm"
               src={playlist?.images?.[0].url}
               alt=""
             />
             <p
-              key={playlist.id}
               onClick={() => {
                 setPlaylistId(playlist.id);
                 router.push({
@@ -92,6 +93,7 @@ function Sidebar() {
               {playlist.name}
             </p>
           </div>
+          // <PlaylistSidebar key={playlist.id} playlist={playlist}/>
         ))}
       </div>
     </div>
