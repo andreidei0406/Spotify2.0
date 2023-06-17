@@ -1,17 +1,15 @@
-import { categoriesState } from "@/atoms/categoriesAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import { debounce } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 
 function SearchComponent() {
   const router = useRouter();
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
-  const [categories, setCategories] = useRecoilState(categoriesState);
+  const [categories, setCategories] = useState();
   const [search, setSearch] = useState('');
   useEffect(() => {
     spotifyApi
@@ -40,7 +38,7 @@ function SearchComponent() {
     []
   );
 
-  console.log(search);
+  console.log(categories);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide pb-36">
