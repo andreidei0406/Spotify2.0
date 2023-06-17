@@ -1,11 +1,11 @@
 import { playlistIdState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { random, shuffle } from "lodash";
+import { property, random, shuffle } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { selector, useRecoilState } from "recoil";
 
 const colors = [
   "from-indigo-500",
@@ -51,15 +51,15 @@ function HomeCenter() {
           data.body.playlists.items.forEach((item) => {
             playlists.push(item);
           });
-          playlists.forEach((item)=>{
+          playlists.forEach((item) => {
             item = item.description.split("<")[0];
-          })
+          });
           setRecommendations(playlists);
         });
     }
   }, [session, spotifyApi]);
 
-  console.log(recommendations)
+  console.log(recommendations);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -90,6 +90,7 @@ function HomeCenter() {
           <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {newAlbums.map((album) => (
               <div
+                key={album.id}
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
@@ -122,6 +123,7 @@ function HomeCenter() {
           <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {featuredPlaylists.map((playlist) => (
               <div
+                key={playlist.id}
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
@@ -154,6 +156,7 @@ function HomeCenter() {
           <div className="grid grid-cols-3 gap-4 py-4 px-8">
             {recommendations.map((playlist) => (
               <div
+                key={playlist.id}
                 className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
@@ -168,7 +171,7 @@ function HomeCenter() {
                   alt=""
                 />
                 <div>
-                  <h1 className="text-md md:text-lg xl:text-xl font-bold">
+                  <h1 className="text-base md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
                   <p>{playlist?.description}</p>
