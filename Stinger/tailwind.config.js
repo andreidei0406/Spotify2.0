@@ -12,6 +12,15 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      screens: {
+        'xxs': '100px',
+        'xs': '320px',
+        'sm': '640px',  
+        'md': '1024px',
+        'lg': '1280px',  
+        'xl': '1536px',
+        '2xl': '1920px'
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],

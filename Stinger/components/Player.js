@@ -136,8 +136,8 @@ function Player() {
   console.log(seeker);
   return (
     <div
-      className="h-24 bg-gradient-to-b from-black to-gray-900 text-white
-    grid grid-cols-3 text-cs md:text-base px-2 md:px-8"
+      className="h-24 hidden bg-gradient-to-b from-black to-gray-900 text-white
+    xs:grid xs:grid-cols-3 text-cs md:text-base px-2 md:px-8"
     >
       {/* left */}
       <div className="flex items-center space-x-4">
@@ -179,7 +179,7 @@ function Player() {
         </div>
       </div>
       {/* right */}
-      <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
+      <div className="hidden sm:flex items-center space-x-2 sm:space-x-3 md:space-x-4 justify-end pr-5">
         <VolumeDownIcon
           onClick={() => volume > 0 && setVolume(volume - 10)}
           className="button"

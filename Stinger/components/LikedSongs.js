@@ -76,9 +76,9 @@ function LikedSongs() {
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="absolute top-5 right-8">
+      <header className="relative">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
+          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
@@ -91,9 +91,9 @@ function LikedSongs() {
           <ChevronDownIcon className="h-5 w-5" />
         </div>
       </header>
-      <header className="absolute top-5 left-8 ml-60">
+      <header className="relative top-5 left-8">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
+          className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
         >
           <ChevronLeftIcon
@@ -109,16 +109,16 @@ function LikedSongs() {
        ${color} h-80 text-white p-8`}
       >
         <img
-          className="w-44 h-44 shadow-2xl"
+          className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl"
           src="https://preview.redd.it/rnqa7yhv4il71.jpg?width=1200&format=pjpg&auto=webp&v=enabled&s=149162703adc5ffe8cfce481b78081f7f534f739"
           alt=""
         />
-        <div>
+        <div className="hidden xs:block" >
           <p>PLAYLIST</p>
           <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
             Liked Songs
           </h1>
-          <div className="flex items-center space-x-3">
+          <div className="inline-flex items-center space-x-3">
             <img
               className="rounded-full w-5 h-5"
               src={session?.user.image}

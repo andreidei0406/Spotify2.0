@@ -62,9 +62,9 @@ function CenterCategory() {
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide pb-36">
-      <header className="absolute top-5 right-8">
+      <header className="relative">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
+          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
@@ -77,9 +77,9 @@ function CenterCategory() {
           <ChevronDownIcon className="h-5 w-5" />
         </div>
       </header>
-      <header className="absolute top-5 left-8 ml-80">
+      <header className="relative top-5 left-8">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
+          className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
         >
           <ChevronLeftIcon
@@ -102,27 +102,29 @@ function CenterCategory() {
       </section>
       <div className="px-8 py-10">
         <section className="">
-          <div className="grid grid-cols-9 gap-7 grid-flow-row-dense">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xxs:gap-3 xs:gap-4 sm:gap-5 md:gap-7 py-4 px-8 grid-flow-row-dense">
             {playlists?.items?.map((playlist) => (
-              <div key={playlist.id} className="text-xs md:text-sm xl:text-md bg-gray-900 px-3 py-3 hover:bg-gray-700 cursor-pointer rounded-md">
-                <div
-                  className="relative items-center rounded-lg"
-                  onClick={() => {
-                    router.push({
-                      pathname: "/playlist/[id]",
-                      query: { id: playlist.id },
-                    });
-                  }}
-                >
-                  <img
-                    className="relative items-center w-48 h-48 shadow-2xl rounded-lg"
-                    src={playlist?.images?.[0].url}
-                    alt=""
-                  />
-                  <p className="font-bold">{playlist?.name}</p>
-                  <p className="truncate">{playlist?.description}</p>
-                </div>
+              <div
+                key={playlist.id}
+                className="text-xs md:text-sm xl:text-md bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-md"
+                onClick={() => {
+                  router.push({
+                    pathname: "/playlist/[id]",
+                    query: { id: playlist.id },
+                  });
+                }}
+              >
+                <img
+                  className="relative xxs:w-22 xxs:h-22 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-58 2xl:h-58 shadow-2xl rounded-lg hover:opacity-75 cursor-pointer"
+                  src={playlist?.images?.[0].url}
+                  alt=""
+                />
+                <p className="hidden xs:flex font-bold">{playlist?.name}</p>
+                <p className="hidden xs:flex truncate">
+                  {playlist?.description}
+                </p>
               </div>
+              // </div>
             ))}
           </div>
         </section>

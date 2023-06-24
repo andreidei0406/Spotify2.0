@@ -63,10 +63,10 @@ function HomeCenter() {
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="absolute top-5 right-8">
+      <header className="relative">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
-    hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
+          className="absolute hidden sm:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
+    hover:opacity-70 cursor-pointer rounded-full text-white"
           onClick={signOut}
         >
           <img
@@ -87,11 +87,11 @@ function HomeCenter() {
       </header>
       <div>
         <section className="">
-          <div className="grid grid-cols-3 gap-4 py-4 px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xxs:gap-3 xs:gap-4 sm:gap-5 md:gap-7 py-4 px-8">
             {newAlbums.map((album) => (
               <div
                 key={album.id}
-                className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
+                className="flex items-center xs:bg-slate-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
                     pathname: "/album/[id]",
@@ -100,15 +100,17 @@ function HomeCenter() {
                 }}
               >
                 <img
-                  className="w-32 h-32 shadow-2xl rounded-sm"
+                  className="relative xxs:w-22 xxs:h-22 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-58 2xl:h-58 shadow-2xl rounded-lg hover:opacity-75 cursor-pointer"
                   src={album?.images?.[0].url}
                   alt=""
                 />
                 <div>
-                  <h1 className="text-md md:text-lg xl:text-xl font-bold">
+                  <h1 className="hidden xs:flex text-sm md:text-lg xl:text-xl font-bold">
                     {album?.name}
                   </h1>
-                  <p>New album by {album?.artists?.[0].name}</p>
+                  <p className="hidden xs:flex">
+                    New album by {album?.artists?.[0].name}
+                  </p>
                 </div>
               </div>
             ))}
@@ -120,11 +122,11 @@ function HomeCenter() {
           </h1>
         </div>
         <section className="">
-          <div className="grid grid-cols-3 gap-4 py-4 px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xxs:gap-3 xs:gap-4 sm:gap-5 md:gap-7 py-4 px-8">
             {featuredPlaylists.map((playlist) => (
               <div
                 key={playlist.id}
-                className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
+                className="flex items-center bg-slate-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
                     pathname: "/playlist/[id]",
@@ -133,15 +135,15 @@ function HomeCenter() {
                 }}
               >
                 <img
-                  className="w-32 h-32 shadow-2xl rounded-sm"
+                  className="relative xxs:w-22 xxs:h-22 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-58 2xl:h-58 shadow-2xl rounded-lg hover:opacity-75 cursor-pointer"
                   src={playlist?.images?.[0].url}
                   alt=""
                 />
                 <div>
-                  <h1 className="text-md md:text-lg xl:text-xl font-bold">
+                  <h1 className="hidden xs:flex text-sm md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
-                  <p>{playlist?.description}</p>
+                  <p className="hidden xs:flex">{playlist?.description}</p>
                 </div>
               </div>
             ))}
@@ -153,11 +155,11 @@ function HomeCenter() {
           </h1>
         </div>
         <section className="">
-          <div className="grid grid-cols-3 gap-4 py-4 px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xxs:gap-3 xs:gap-4 sm:gap-5 md:gap-7 py-4 px-8">
             {recommendations.map((playlist) => (
               <div
                 key={playlist.id}
-                className="flex items-center bg-gray-500 hover:opacity-75 rounded-lg cursor-pointer"
+                className="flex items-center bg-slate-500 hover:opacity-75 rounded-lg cursor-pointer"
                 onClick={() => {
                   router.push({
                     pathname: "/playlist/[id]",
@@ -166,15 +168,15 @@ function HomeCenter() {
                 }}
               >
                 <img
-                  className="w-32 h-32 shadow-2xl rounded-sm"
+                  className="relative xxs:w-22 xxs:h-22 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-58 2xl:h-58 shadow-2xl rounded-lg hover:opacity-75 cursor-pointer"
                   src={playlist?.images?.[0].url}
                   alt=""
                 />
                 <div>
-                  <h1 className="text-base md:text-lg xl:text-xl font-bold">
+                  <h1 className="hidden xs:flex text-sm md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
-                  <p>{playlist?.description}</p>
+                  <p className="hidden xs:flex">{playlist?.description}</p>
                 </div>
               </div>
             ))}

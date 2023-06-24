@@ -10,7 +10,7 @@ function Search() {
         <SearchComponent />
       </main>
 
-      <div className="sticky bottom-0">
+      <div className="hidden xs:bottom-0 xs:sticky">
         <Player />
       </div>
     </div>

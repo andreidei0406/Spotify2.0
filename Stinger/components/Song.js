@@ -81,12 +81,12 @@ function Song({ order, track, albumTrack, isLiked, isPlaylist }) {
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
         <img
-          className="h-10 w-10"
+          className="h-10 w-10 xxs:w-8 xxs:h-8"
           src={track?.track.album.images?.[0]?.url ?? image}
           alt=""
         />
-        <div>
-          <p className="w-36 lg:w-64 truncate text-white">
+        <div className="hidden xs:block">
+          <p className="w-36 md:w-64 lg:w-80 truncate text-white">
             {track?.track.name ?? albumTrack.name}
           </p>
           <p className="w-40">
@@ -95,8 +95,8 @@ function Song({ order, track, albumTrack, isLiked, isPlaylist }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between ml-auto md:ml-0">
-        <p className="w-40 hidden md:inline">
+      <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
+        <p className="w-40 hidden sm:inline">
           {track?.track.album.name ?? albumTrack.name}
         </p>
         <p>

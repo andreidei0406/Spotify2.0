@@ -10,16 +10,15 @@ function SearchComponent() {
   const { data: session } = useSession();
   const spotifyApi = useSpotify();
   const [categories, setCategories] = useState();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   useEffect(() => {
     spotifyApi
-      .getCategories({limit: 50})
+      .getCategories({ limit: 50 })
       .then((data) => {
         setCategories(data.body.categories.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session]);
-
 
   useEffect(() => {
     if (search) {
@@ -29,11 +28,14 @@ function SearchComponent() {
 
   const debounceSearch = useCallback(
     debounce((search) => {
-      spotifyApi.search(search, ["playlist", "artist", "album", "track"])
-      .then((data) =>{
-        console.log(data);
-      })
-      .catch((err) => {console.log(err)});
+      spotifyApi
+        .search(search, ["playlist", "artist", "album", "track"])
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, 500),
     []
   );
@@ -44,8 +46,8 @@ function SearchComponent() {
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide pb-36">
       <header className="absolute top-5 right-8">
         <div
-          className="flex items-center bg-black space-x-3 opacity-90 
-    hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
+          className="hidden sm:inline-flex items-center bg-black space-x-3 opacity-90 
+          hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
           <img
@@ -58,7 +60,7 @@ function SearchComponent() {
         </div>
       </header>
       <header>
-        <div className="mt-5 ml-8">
+        <div className="mt-5 ml-8 hidden sm:inline-flex">
           <input
             type="search"
             id="default-search"
@@ -71,31 +73,40 @@ function SearchComponent() {
       </header>
       <div className="px-8 py-10">
         <section className="">
-          <div className="grid grid-cols-9 gap-7">
-            { search ==='' ? 
-            categories?.map((category) => (
-              <div
-                key={category.id}
-                className="relative items-center hover:opacity-75 rounded-lg cursor-pointer"
-                onClick={() => {
-                  router.push({
-                    pathname: "/category/[id]",
-                    query: { id: category.id },
-                  });
-                }}
-              >
-                <img
-                  className="relative w-48 h-48 shadow-2xl rounded-lg"
-                  src={category?.icons?.[0].url}  
-                  alt=""
-                />
-                <div className="text-md md:text-lg xl:text-xl font-bold">
-                  {category?.name}
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 xxs:gap-1 xs:gap-3 sm:gap-5 md:gap-7">
+            {search === "" ? (
+              categories?.map((category) => (
+                <div
+                  key={category.id}
+                  className="relative items-center rounded-lg"
+                >
+                  <img
+                    className="relative xxs:w-20 xxs:h-20 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-58 2xl:h-58 shadow-2xl rounded-lg hover:opacity-75 cursor-pointer"
+                    src={category?.icons?.[0].url}
+                    alt=""
+                    onClick={() => {
+                      router.push({
+                        pathname: "/category/[id]",
+                        query: { id: category.id },
+                      });
+                    }}
+                  />
+                  <div
+                    className="xxs:text-sm xs:text-md sm:text-sm md:text-sm xl:text-base 2xl:text-xl hover:opacity-75 cursor-pointer font-bold"
+                    onClick={() => {
+                      router.push({
+                        pathname: "/category/[id]",
+                        query: { id: category.id },
+                      });
+                    }}
+                  >
+                    {category?.name}
+                  </div>
                 </div>
-              </div>
-            )) :
-               <p>salut</p>
-            }
+              ))
+            ) : (
+              <p>salut</p>
+            )}
           </div>
         </section>
       </div>

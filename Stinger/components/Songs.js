@@ -70,7 +70,7 @@ function Songs({ isAlbum, isLiked }) {
 
   return (
     <div className="px-8 flex flex-col space-y-1 pb-28 text-white">
-      <div className="flex items-center">
+      <div className="hidden xs:flex items-center">
         <PlayIcon
           className="button w-14 h-14 text-green-500 mr-1"
           onClick={shufflePlay}
