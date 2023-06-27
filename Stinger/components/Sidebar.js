@@ -23,14 +23,27 @@ function Sidebar() {
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists({ limit: 50, offset: 1 }).then((data) => {
-        setPlaylists(data.body.items);
+        setPlaylists(data.body?.items);
       });
     }
   }, [session, spotifyApi]);
 
+  const createPlaylist = () => {
+    spotifyApi
+      .createPlaylist("Give it a name...")
+      .then((data) => {
+        setPlaylistId(data.body?.id);
+        router.push({
+          pathname: "/playlist/[id]",
+          query: { id: data.body?.id, custom: Boolean(true) },
+        });
+      })
+      .catch((err) => console.error("Unable to create playlist", err));
+  };
+
   return (
     <div
-      className="text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
+      className="bg-slate-800 text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
     overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[15rem] lg:max-w-[20rem]
     hidden md:inline-flex pb-36"
     >
@@ -55,7 +68,10 @@ function Sidebar() {
         </button>
 
         <hr className="border-t-[0.1px] border-gray-900" />
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button
+          className="flex items-center space-x-2 hover:text-white"
+          onClick={createPlaylist}
+        >
           <PlusCircleIcon className="h-5 w-5" />
           <p>Create Playlist</p>
         </button>
@@ -77,7 +93,7 @@ function Sidebar() {
           <div key={playlist.id} className="flex items-center space-x-3">
             <img
               className="w-10 h-10 shadow-md rounded-sm"
-              src={playlist?.images?.[0].url}
+              src={playlist?.images?.[0]?.url}
               alt=""
             />
             <p

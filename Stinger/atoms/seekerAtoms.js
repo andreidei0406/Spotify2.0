@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export const seekerState = atom({
   key: "seekerState",
-  default: 0,
+  default: "",
 });
 
 export const seekerIdState = atom({

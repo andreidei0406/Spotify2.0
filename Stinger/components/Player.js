@@ -1,4 +1,4 @@
-import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
+import { currentTrackIdState, isPlayingState, isRepeatState } from "@/atoms/songAtom";
 import useSongInfo from "@/hooks/useSongInfo";
 import useSpotify from "@/hooks/useSpotify";
 import {
@@ -18,6 +18,7 @@ import { debounce } from "lodash";
 import { queueIdState } from "@/atoms/queueAtoms";
 import { seekerState } from "@/atoms/seekerAtoms";
 import { durationState } from "@/atoms/durationAtoms";
+import { millisToMinutesAndSeconds } from "@/lib/time";
 
 function Player() {
   const spotifyApi = useSpotify();
@@ -31,26 +32,32 @@ function Player() {
   const [seeker, setSeeker] = useRecoilState(seekerState);
   const [duration, setDuration] = useRecoilState(durationState);
   const songInfo = useSongInfo();
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useRecoilState(isRepeatState);
 
   const fetchCurrentSong = () => {
     if (!songInfo) {
-      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("Now playing: ", data.body?.item);
-        setCurrentTrackId(data.body?.item.id);
-        setDuration(data.body.item.duration_ms);
-        console.log(duration);
-        spotifyApi.getMyCurrentPlaybackState().then((data) => {
-          setIsPlaying(data.body?.is_playing);
-        });
-      }).catch((err) => console.error("Can't return current playing track:", err));
+      spotifyApi
+        .getMyCurrentPlayingTrack()
+        .then((data) => {
+          // console.log("Now playing: ", data.body?.item);
+          setCurrentTrackId(data.body?.item.id);
+          setDuration(millisToMinutesAndSeconds(data.body?.item.duration_ms));
+          // console.log(duration);
+          spotifyApi.getMyCurrentPlaybackState().then((data) => {
+            setIsPlaying(data.body?.is_playing);
+          });
+        })
+        .catch((err) =>
+          console.error("Can't return current playing track:", err)
+        );
     }
   };
 
   const handlePlayPause = () => {
-    setSeeker(0);
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body.is_playing) {
-        console.log(data.body);
+      if (data.body?.is_playing) {
+        // console.log(data.body);
         spotifyApi.pause();
         setIsPlaying(false);
       } else {
@@ -71,19 +78,19 @@ function Player() {
   const skipNext = () => {
     let index = 0;
     queue.forEach((element, i) => {
-      if (element.id === currentTrackId) {
+      if (element?.track?.id === currentTrackId) {
         index = i;
       }
     });
     if (index + 1 > queue.length) {
-      setCurrentTrackId(queue[0].id);
-      setDuration(queue[0].duration_ms);
+      setCurrentTrackId(queue[0].track.id);
+      setDuration(queue[0].track.duration_ms);
       spotifyApi.pause();
       setIsPlaying(false);
     } else {
-      setCurrentTrackId(queue[index + 1].id);
-      setDuration(queue[index + 1].duration_ms);
-      playSong(queue[index + 1].id);
+      setCurrentTrackId(queue[index + 1].track.id);
+      setDuration(queue[index + 1].track.duration_ms);
+      playSong(queue[index + 1].track.id);
     }
   };
 
@@ -128,12 +135,50 @@ function Player() {
   );
 
   useEffect(() => {
-    spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      setSeeker(data.body.progress_ms);
-    }).catch((err) => console.error("Can't seek: ", err));
+    spotifyApi
+      .getMyCurrentPlaybackState()
+      .then((data) => {
+        // console.log(data.body);
+        setSeeker(millisToMinutesAndSeconds(data.body?.progress_ms));
+      })
+      .catch((err) => console.error("Can't seek: ", err));
   }, [seeker, isPlaying, session, currentTrackId, spotifyApi]);
 
-  console.log(seeker);
+  const toggleShuffle = () => {
+    spotifyApi
+      .setShuffle(!shuffle)
+      .then(() => {
+        setShuffle(!shuffle);
+      })
+      .catch((err) => console.error("Couldn't set shuffle", err));
+  };
+
+  const toggleReplay = () => {
+    if(!repeat){
+      spotifyApi
+      .setRepeat("track")
+      .then(() => {
+        setRepeat(!repeat);
+      })
+      .catch((err) => console.error("Couldn't set repeat", err));
+    } else {
+      spotifyApi
+      .setRepeat("off")
+      .then(() => {
+        setRepeat(!repeat);
+      })
+      .catch((err) => console.error("Couldn't set repeat", err));
+    }
+  };
+
+  // useEffect(() =>{
+  //   spotifyApi.getMyCurrentPlaybackState()
+  //   .then((data) => {
+  //   })
+  //   .catch((err) => console.error("Can't seek: ", err));
+  // })
+
+  // console.log(seeker);
   return (
     <div
       className="h-24 hidden bg-gradient-to-b from-black to-gray-900 text-white
@@ -154,7 +199,14 @@ function Player() {
       {/* center */}
       <div className="mt-5">
         <div className="flex items-center justify-evenly">
-          <SwitchHorizontalIcon className="button" />
+          {shuffle ? (
+            <SwitchHorizontalIcon
+              className="button text-green-500"
+              onClick={toggleShuffle}
+            />
+          ) : (
+            <SwitchHorizontalIcon className="button" onClick={toggleShuffle} />
+          )}
           <RewindIcon className="button" onClick={skipPrevious} />
           {isPlaying ? (
             <PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />
@@ -162,7 +214,11 @@ function Player() {
             <PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />
           )}
           <FastForwardIcon className="button" onClick={skipNext} />
-          <ReplyIcon className="button" />
+          {repeat ? (
+            <ReplyIcon className="button text-green-500" onClick={toggleReplay}/>
+          ) : (
+            <ReplyIcon className="button" onClick={toggleReplay} />
+          )}
         </div>
         <div className="flex flex-col py-3">
           <input
@@ -188,7 +244,7 @@ function Player() {
           className="w-14 md:w-28"
           type="range"
           value={volume}
-          onChange={(e) => seekTo(Number(e.target.value))}
+          onChange={(e) => setVolume(Number(e.target.value))}
           min={0}
           max={100}
         />

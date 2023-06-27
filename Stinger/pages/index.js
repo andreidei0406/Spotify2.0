@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <div className="bg-black h-screen overflow-hidden">
       <main className="flex">
-        <Sidebar />
-        <HomeCenter />
+        <Sidebar className="bg-slate-500"/>
+        <HomeCenter className="bg-slate-800"/>
       </main>
 
       <div className="sticky bottom-0">

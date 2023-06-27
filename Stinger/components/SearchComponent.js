@@ -1,5 +1,6 @@
 import useSpotify from "@/hooks/useSpotify";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import { LogoutIcon } from "@heroicons/react/solid";
 import { debounce } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -15,7 +16,7 @@ function SearchComponent() {
     spotifyApi
       .getCategories({ limit: 50 })
       .then((data) => {
-        setCategories(data.body.categories.items);
+        setCategories(data.body?.categories.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session]);
@@ -55,8 +56,8 @@ function SearchComponent() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+          <h2>Log out</h2>
+          <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
       <header>
@@ -64,7 +65,7 @@ function SearchComponent() {
           <input
             type="search"
             id="default-search"
-            className="flex p-4 text-sm text-gray-900 border bg-gray-700 border-gray-600 placeholder-gray-400 rounded-2xl focus:ring-green-500 focus:border-green-500"
+            className="flex p-4 text-sm text-white border bg-gray-700 border-gray-600 placeholder-gray-400 rounded-2xl focus:ring-green-500 focus:border-green-500"
             placeholder="What do you want to listen to?"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

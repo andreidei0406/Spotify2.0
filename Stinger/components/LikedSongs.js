@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Songs from "./Songs";
 import { queueIdState } from "@/atoms/queueAtoms";
+import { LogoutIcon } from "@heroicons/react/solid";
 
 const colors = [
   "from-indigo-500",
@@ -39,7 +40,7 @@ function LikedSongs() {
 
   useEffect(() => {
     spotifyApi.getMySavedTracks().then((data) => {
-      setTotal(data.body.total);
+      setTotal(data.body?.total);
     });
   });
 
@@ -67,12 +68,21 @@ function LikedSongs() {
     spotifyApi
       .getMySavedTracks({ limit: 50, offset: random(700, false) })
       .then((data) => {
-        setLiked(data.body.items);
+        setLiked(data.body?.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi]);
 
   console.log(liked);
+
+  const removeFromLiked = () => {
+    if(albumTrack){
+      console.log(albumTrack.id);
+      spotifyApi.removeFromMySavedTracks([albumTrack.id]).then().catch(err => console.error("Couldn't remove track", err));
+    } else {
+      spotifyApi.removeFromMySavedTracks([track.track?.id]).then().catch(err => console.error("Couldn't remove track", err));
+    }
+  }
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -87,8 +97,8 @@ function LikedSongs() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+          <h2>Log out</h2>
+          <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
       <header className="relative top-5 left-8">

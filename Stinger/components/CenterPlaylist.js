@@ -7,6 +7,7 @@ import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
 import Songs from "./Songs";
 import { useRouter } from "next/router";
+import { CheckCircleIcon, LogoutIcon } from "@heroicons/react/solid";
 
 const colors = [
   "from-indigo-500",
@@ -39,15 +40,54 @@ function CenterPlaylist() {
 
   useEffect(() => {
     spotifyApi
-      .getPlaylist(router.query.id)
+      .getPlaylist(router.query.id, { limit: 50, offset: 5 })
       .then((data) => {
-        setPlaylist(data.body);
+        setPlaylist(data?.body);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, router.query.id]);
 
+  const [playlistName, setPlaylistName] = useState("");
+
+  const [className, setClassName] = useState(
+    "xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl hover:opacity-70 cursor-pointer"
+  );
+  // const uploadImage = () => {
+  //   var input = document.createElement("input");
+  //   input.type = "file";
+
+  //   input.onchange = (e) => {
+  //     // getting a hold of the file reference
+  //     var file = e.target.files[0];
+
+  //     // setting up the reader
+  //     var reader = new FileReader();
+
+  //     reader.onload = (readerEvent) => {
+  //       var content = readerEvent.target.result; // this is the content!
+  //       document.querySelector("#image_input").src = `url(${content})`;
+  //       document.querySelector("#image_input").className = className;
+  //     };
+
+  //     reader.readAsDataURL(file); // this is reading as data url
+
+  //     // here we tell the reader what to do when it's done reading...
+  //   };
+  //   input.click();
+  // };
+
+  const savePlaylistInfo = () => {
+    spotifyApi
+      .changePlaylistDetails(router.query.id, { name: playlistName })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
+  };
+  console.log(playlist);
+
   return (
-    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
+    <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="relative">
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
@@ -59,38 +99,86 @@ function CenterPlaylist() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+          <h2>Log out</h2>
+          <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
       <header className="relative top-5 left-8">
-        <div className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 
-        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white">
-          <ChevronLeftIcon className="h-10 w-10" onClick={()=>{
-            router.back();
-          }} />
+        <div
+          className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 
+        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
+        >
+          <ChevronLeftIcon
+            className="h-10 w-10"
+            onClick={() => {
+              router.back();
+            }}
+          />
         </div>
       </header>
-      <section
-        className={`flex items-end space-x-7 bg-gradient-to-b to-black
-       ${color} h-80 text-white p-8`}
-      >
-        <img
-          className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl"
-          src={playlist?.images?.[0].url}
-          alt=""
-        />
-        <div className="hidden xs:block">
-          <p>PLAYLIST</p>
-          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
-            {playlist?.name}
-          </h1>
-        </div>
-      </section>
 
+      {router.query.custom === "true" ? (
+        <section
+          className={`flex items-end space-x-7 bg-gradient-to-b to-slate-500
+         ${color} h-80 text-white p-8`}
+        >
+          <img
+            className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl hover:opacity-70 cursor-pointer"
+            src="https://www.lifewire.com/thmb/tHjH9M19MsA9gFY-qcZvKYv5oG4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cloud-upload-a30f385a928e44e199a62210d578375a.jpg"
+            alt=""
+            id="image_input"
+            // onClick={uploadImage}
+          />
+
+          <div className="hidden xs:block">
+            <p>PLAYLIST</p>
+            <input
+              className="flex p-4 text-sm text-white border bg-gray-700 border-gray-600 placeholder-gray-400 rounded-2xl focus:ring-green-500 focus:border-green-500"
+              placeholder="Give it a name!"
+              type="text"
+              onChange={(e) => {
+                setPlaylistName(e.target.value);
+              }}
+              value={playlistName}
+            />
+            <button
+              className="items-center  hover:text-white"
+              onClick={savePlaylistInfo}
+            >
+              <CheckCircleIcon className="button py-2 w-12 h-12" />
+            </button>
+          </div>
+        </section>
+      ) : (
+        <section
+          className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
+         ${color} h-80 text-white p-8`}
+        >
+          <img
+            className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl"
+            src={playlist?.images?.[0]?.url}
+            alt=""
+          />
+          <div className="hidden xs:block space-y-2">
+            <p>PLAYLIST</p>
+            <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
+              {playlist?.name}
+            </h1>
+            <p>{playlist?.description}</p>
+          </div>
+        </section>
+      )}
       <div>
-        <Songs isAlbum={false}/>
+        <Songs songs={playlist?.tracks?.items} />
       </div>
+      {/* {router.query.custom === "false"  ?
+  (
+      
+    
+  ) : (
+    <button>Click here to add Songs</button>
+  )
+} */}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import useSpotify from "@/hooks/useSpotify";
 import Songs from "./Songs";
 import { useRouter } from "next/router";
 import { albumState } from "@/atoms/albumAtoms";
+import { LogoutIcon } from "@heroicons/react/solid";
 
 const colors = [
   "from-indigo-500",
@@ -62,8 +63,8 @@ function CenterArtist() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+          <h2>Log out</h2>
+          <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
       <header className="absolute top-5 left-8 ml-60">

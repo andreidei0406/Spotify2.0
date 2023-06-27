@@ -42,7 +42,7 @@ function CenterCategory() {
     spotifyApi
       .getCategory(router.query.id)
       .then((data) => {
-        setCategory(data.body);
+        setCategory(data?.body);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi, session, router.query.id]);
@@ -52,7 +52,7 @@ function CenterCategory() {
       spotifyApi
         .getPlaylistsForCategory(category?.id)
         .then((data) => {
-          setPlaylists(data.body.playlists);
+          setPlaylists(data.body?.playlists);
         })
         .catch((err) => console.log("Something went wrong!", err));
     }

@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export const durationState = atom({
   key: "durationState",
-  default: 0,
+  default: "",
 });
 
 export const durationIdState = atom({
