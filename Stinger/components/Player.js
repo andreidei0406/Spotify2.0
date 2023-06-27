@@ -181,7 +181,7 @@ function Player() {
   // console.log(seeker);
   return (
     <div
-      className="h-24 hidden bg-gradient-to-b from-black to-gray-900 text-white
+      className="h-24 hidden bg-gradient-to-b from-slate-800 to-black text-white
     xs:grid xs:grid-cols-3 text-cs md:text-base px-2 md:px-8"
     >
       {/* left */}

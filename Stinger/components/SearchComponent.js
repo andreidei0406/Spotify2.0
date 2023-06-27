@@ -44,7 +44,7 @@ function SearchComponent() {
   console.log(categories);
 
   return (
-    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide pb-36">
+    <div className="flex-grow bg-slate-800 h-screen overflow-y-scroll scrollbar-hide pb-36">
       <header className="absolute top-5 right-8">
         <div
           className="hidden sm:inline-flex items-center bg-black space-x-3 opacity-90 

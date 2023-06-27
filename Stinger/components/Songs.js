@@ -123,7 +123,7 @@ function Songs({ isAlbum, isLiked, isPlaylist, songs, albumImage }) {
         })
         .catch((err) => console.error("Can't check", err));
     }
-  }, [spotifyApi]);
+  }, [session, songs]);
 
   console.log(songs);
   return (

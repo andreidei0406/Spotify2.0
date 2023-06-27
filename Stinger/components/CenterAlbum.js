@@ -76,7 +76,7 @@ function CenterAlbum() {
         </div>
       </header>
       <section
-        className={`flex items-end space-x-7 bg-gradient-to-b to-black
+        className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
        ${color} h-80 text-white p-8`}
       >
         <img

@@ -73,16 +73,6 @@ function LikedSongs() {
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi]);
 
-  console.log(liked);
-
-  const removeFromLiked = () => {
-    if(albumTrack){
-      console.log(albumTrack.id);
-      spotifyApi.removeFromMySavedTracks([albumTrack.id]).then().catch(err => console.error("Couldn't remove track", err));
-    } else {
-      spotifyApi.removeFromMySavedTracks([track.track?.id]).then().catch(err => console.error("Couldn't remove track", err));
-    }
-  }
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -115,7 +105,7 @@ function LikedSongs() {
         </div>
       </header>
       <section
-        className={`flex items-end space-x-7 bg-gradient-to-b to-black
+        className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
        ${color} h-80 text-white p-8`}
       >
         <img
@@ -140,7 +130,7 @@ function LikedSongs() {
         </div>
       </section>
 
-      <div><Songs isLiked={true} /></div>
+      <div><Songs songs={liked} /></div>
     </div>
   );
 }

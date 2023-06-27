@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { HeartIcon as BlankHeartIcon } from "@heroicons/react/outline";
+import { add } from "lodash";
 
 function Song({
   order,
@@ -21,7 +22,7 @@ function Song({
   isPlaylist,
   isLikedByUser,
   songs,
-  albumImage
+  albumImage,
 }) {
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
@@ -29,45 +30,34 @@ function Song({
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [duration, setDuration] = useRecoilState(durationState);
+  const [isActive, setIsActive] = useState(false);
+  const [isActive2, setIsActive2] = useState(false);
 
   const playSong = () => {
+    console.log(track?.id);
     setCurrentTrackId(track?.id);
     setIsPlaying(true);
-      spotifyApi.play({
-        uris: [track?.uri],
-      });
-      setDuration(track?.duration_ms);
-      setQueue(songs);
+    spotifyApi.play({
+      uris: [track?.uri],
+    });
+    setDuration(track?.duration_ms);
+    setQueue(songs);
   };
 
   const removeFromLiked = () => {
-    if (albumTrack) {
-      console.log(albumTrack.id);
-      spotifyApi
-        .removeFromMySavedTracks([albumTrack.id])
-        .then()
-        .catch((err) => console.error("Couldn't remove track", err));
-    } else {
-      spotifyApi
-        .removeFromMySavedTracks([track.track?.id])
-        .then()
-        .catch((err) => console.error("Couldn't remove track", err));
-    }
+    console.log(track)
+    spotifyApi
+      .removeFromMySavedTracks(track?.id)
+      .then(() => console.log(isLikedByUser))
+      .catch((err) => console.error("Couldn't remove track", err));
   };
 
   const addToLiked = () => {
-    if (albumTrack) {
-      console.log(albumTrack.id);
-      spotifyApi
-        .addToMySavedTracks([albumTrack.id])
-        .then()
-        .catch((err) => console.error("Couldn't save track", err));
-    } else {
-      spotifyApi
-        .addToMySavedTracks([track.track?.id])
-        .then()
-        .catch((err) => console.error("Couldn't save track", err));
-    }
+    console.log(track);
+    spotifyApi
+      .addToMySavedTracks([track?.id])
+      .then(() => console.log(isLikedByUser))
+      .catch((err) => console.error("Couldn't save track", err));
   };
 
   return (
@@ -78,11 +68,7 @@ function Song({
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
-        <img
-          className="h-10 w-10 xxs:w-8 xxs:h-8"
-          src={albumImage}
-          alt=""
-        />
+        <img className="h-10 w-10 xxs:w-8 xxs:h-8" src={albumImage} alt="" />
         <div className="hidden xs:block">
           <p className="w-36 md:w-64 lg:w-80 truncate text-white">
             {track?.name}
@@ -92,12 +78,50 @@ function Song({
       </div>
 
       <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
-        <p className="w-40 hidden sm:inline">{track?.album?.name ?? track?.name}</p>
+        <p className="w-40 hidden sm:inline">
+          {track?.album?.name ?? track?.name}
+        </p>
         <p>{millisToMinutesAndSeconds(track?.duration_ms)}</p>
         {isLikedByUser ? (
-          <HeartIcon className="button" onClick={removeFromLiked} />
+          <div>
+            {isActive ? (
+              <BlankHeartIcon
+                className="button select-none"
+                onClick={() => {
+                  addToLiked
+                  setIsActive(!isActive)
+                }}
+              />
+            ) : (
+              <HeartIcon
+                className="button select-none"
+                onClick={() => {
+                  removeFromLiked;
+                  setIsActive(!isActive);
+                }}
+              />
+            )}
+          </div>
         ) : (
-          <BlankHeartIcon className="button" onClick={addToLiked} />
+          <div>
+            {isActive2 ? (
+              <HeartIcon
+                className="button select-none"
+                onClick={() => {
+                  removeFromLiked;
+                  setIsActive2(!isActive2);
+                }}
+              />
+            ) : (
+              <BlankHeartIcon
+                className="button select-none"
+                onClick={() => {
+                  addToLiked;
+                  setIsActive2(!isActive2);
+                }}
+              />
+            )}
+          </div>
         )}
       </div>
     </div>

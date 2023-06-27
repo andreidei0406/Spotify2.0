@@ -1,5 +1,6 @@
 import useSpotify from "@/hooks/useSpotify";
 import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { LogoutIcon } from "@heroicons/react/solid";
 import { shuffle } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -61,7 +62,7 @@ function CenterCategory() {
   console.log(playlists);
 
   return (
-    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide pb-36">
+    <div className="flex-grow bg-slate-800 h-screen overflow-y-scroll scrollbar-hide pb-36">
       <header className="relative">
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
@@ -73,8 +74,8 @@ function CenterCategory() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+          <h2>Log out</h2>
+          <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
       <header className="relative top-5 left-8">
@@ -91,7 +92,7 @@ function CenterCategory() {
         </div>
       </header>
       <section
-        className={`flex items-end space-x-7 bg-gradient-to-b to-black
+        className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
        ${color} h-80 text-white p-8`}
       >
         <div>
