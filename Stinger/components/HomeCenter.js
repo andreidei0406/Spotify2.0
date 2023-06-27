@@ -229,7 +229,7 @@ function HomeCenter() {
                   <h1 className="hidden xs:flex text-sm md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
-                  <p className="hidden xs:flex">{playlist?.description}</p>
+                  <p className="hidden xs:flex overflow-hidden">{playlist?.description}</p>
                 </div>
               </div>
             ))}

@@ -17,7 +17,7 @@ const colors = [
   "from-sky-500",
 ];
 
-const i = 0;
+let i = 0;
 
 function LikedSongs() {
   const [queue, setQueue] = useRecoilState(queueIdState);
@@ -33,7 +33,9 @@ function LikedSongs() {
       total.push(param);
     },
   ] = useState(null);
+  const likedSongs = useLikedSongs();
 
+  
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [router.query.id]);
@@ -44,26 +46,6 @@ function LikedSongs() {
     });
   });
 
-  // useEffect(() => {
-  //   const songs = {};
-  //   let i = 0;
-  //   while(i <= total){
-  //     spotifyApi
-  //       .getMySavedTracks({ limit: 50, offset: i })
-  //       .then((data) => {
-  //           // songs.push(JSON.parse(JSON.stringify(data.body.items)));
-  //           // songs.push(...data.body.items);
-  //           data.body.items.map(item =>{
-  //             songs.push(item);
-  //           })
-  //       })
-  //       .catch((err) => console.log("Something went wrong!", err))
-  //     i+=50;
-  //   }
-  //   console.log(songs);
-  //   setLiked(songs)
-  // }, [spotifyApi, session]);
-
   useEffect(() => {
     spotifyApi
       .getMySavedTracks({ limit: 50, offset: random(700, false) })
@@ -73,6 +55,7 @@ function LikedSongs() {
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi]);
 
+  console.log(likedSongs);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -113,7 +96,7 @@ function LikedSongs() {
           src="https://preview.redd.it/rnqa7yhv4il71.jpg?width=1200&format=pjpg&auto=webp&v=enabled&s=149162703adc5ffe8cfce481b78081f7f534f739"
           alt=""
         />
-        <div className="hidden xs:block" >
+        <div className="hidden xs:block">
           <p>PLAYLIST</p>
           <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
             Liked Songs
