@@ -133,7 +133,7 @@ function Player() {
       fetchCurrentSong();
       setVolume(50);
     }
-  });
+  }, [session]);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && volume > 0 && volume < 100) {
@@ -200,7 +200,6 @@ function Player() {
       className="h-24 hidden bg-gradient-to-b from-slate-800 to-black text-white
     xs:grid xs:grid-cols-3 text-cs md:text-base px-2 md:px-8"
     >
-      {/* left */}
       <div className="flex items-center space-x-4">
         <img
           className="hidden md:inline h-10 w-10"
@@ -227,7 +226,6 @@ function Player() {
           </p>
         </div>
       </div>
-      {/* center */}
       <div className="mt-5">
         <div className="flex items-center justify-evenly">
           {shuffle ? (
@@ -268,7 +266,6 @@ function Player() {
           />
         </div>
       </div>
-      {/* right */}
       <div className="hidden sm:flex items-center space-x-2 sm:space-x-3 md:space-x-4 justify-end pr-5">
         <VolumeDownIcon
           onClick={() => volume > 0 && setVolume(volume - 10)}

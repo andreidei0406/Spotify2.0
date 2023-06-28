@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/solid";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";

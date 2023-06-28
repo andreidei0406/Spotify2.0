@@ -1,6 +1,6 @@
 import { likeState, likedState } from "@/atoms/likedAtoms";
 import useSpotify from "@/hooks/useSpotify";
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/solid";
 import { cloneDeep, random, shuffle } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";

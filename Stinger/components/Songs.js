@@ -11,6 +11,8 @@ import { queueIdState } from "@/atoms/queueAtoms";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { PuzzleIcon } from "@heroicons/react/solid";
+import { gameArtistState, gameSongState } from "@/atoms/gameAtom";
 
 function Songs({
   isAlbum,
@@ -19,6 +21,7 @@ function Songs({
   songs,
   albumImage,
   ignoreAlbumName,
+  useHeigthScreen
 }) {
   const { data: session, status } = useSession();
 
@@ -32,6 +35,9 @@ function Songs({
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [isLikedByUser, setIsLikedByUser] = useState([]);
+  const [songGame, setSongGame] = useRecoilState(gameSongState);
+  const [artistGame, setArtistGame] = useRecoilState(gameArtistState);
+
   const shufflePlay = () => {
     let randomSong = null;
     random(playlist?.tracks.items.length - 1, false);
@@ -69,6 +75,31 @@ function Songs({
     // }
   };
 
+  const playGame = () => {
+    if (router.pathname.includes("playlist")) {
+      const gameSongs = [];
+      const artists = [];
+      songs.map((item) => {
+        gameSongs.push(item?.track);
+        artists.push(item?.track?.artists?.[0]);
+      });
+      setSongGame(gameSongs);
+      setArtistGame(artists);
+    } else {
+      const artists = [];
+      songs.map((item) => {
+        artists.push(item?.artists?.[0]);
+      });
+      setSongGame(songs);
+      setArtistGame(artists);
+    }
+
+    router.push({
+      pathname: "/game",
+      query: { album: isAlbum },
+    });
+  };
+
   useEffect(() => {
     if (spotifyApi.getAccessToken() && songs) {
       const ids = [];
@@ -91,18 +122,30 @@ function Songs({
     }
   }, [songs]);
 
+  useEffect(() => {});
+
   console.log(songs);
   return (
-    <div className="bg-slate-800 h-screen px-8 flex flex-col space-y-1 pb-28 text-white">
+    <div className={`bg-slate-800 ${useHeigthScreen ?? ''} px-8 flex flex-col space-y-1 pb-28 text-white`}>
       {ignoreAlbumName ? (
         <div></div>
       ) : (
-        <div className="hidden xs:flex items-center">
-          <PlayIcon
-            className="button w-14 h-14 text-green-500 mr-1"
-            onClick={shufflePlay}
-          />
-          <h2 className="text-green-500">Shuffle Play</h2>
+        <div className="">
+          <div className="hidden xs:flex items-center float-left">
+            <PlayIcon
+              className="button w-14 h-14 text-green-500"
+              onClick={shufflePlay}
+            />
+            <h2 className="text-green-500">Shuffle Play</h2>
+          </div>
+
+          <div className="hidden xs:flex items-center">
+            <h2 className="text-green-500 ml-auto mr-2">Play a game!</h2>
+            <PuzzleIcon
+              className="button w-14 h-14 text-green-500 "
+              onClick={playGame}
+            />
+          </div>
         </div>
       )}
       {songs?.map((track, i) => (
@@ -120,29 +163,6 @@ function Songs({
           ignoreAlbumName={ignoreAlbumName}
         />
       ))}
-
-      {/* {isAlbum
-        ? album?.tracks.items.map((track, i) => (
-            <Song
-              key={track.id}
-              albumTrack={track}
-              order={i}
-              isLikedByUser={isLikedByUser[i]}
-            />
-          ))
-        : isLiked
-        ? liked?.map((track, i) => (
-            <Song key={track.track.id} isLiked="true" track={track} order={i} isLikedByUser={true}/>
-          ))
-        : playlist?.tracks.items.map((track, i) => (
-            <Song
-              key={track.track.id}
-              isPlaylist="true"
-              track={track}
-              order={i}
-              isLikedByUser={isLikedByUser[i]}
-            />
-          ))} */}
     </div>
   );
 }

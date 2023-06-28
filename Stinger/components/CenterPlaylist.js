@@ -1,13 +1,13 @@
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
-import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { shuffle } from "lodash";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
+import { playlistState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
-import Songs from "./Songs";
-import { useRouter } from "next/router";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { CheckCircleIcon, LogoutIcon } from "@heroicons/react/solid";
+import { shuffle } from "lodash";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import Songs from "./Songs";
 
 const colors = [
   "from-indigo-500",
@@ -39,13 +39,15 @@ function CenterPlaylist() {
   }, [router.query.id]);
 
   useEffect(() => {
-    spotifyApi
+    if(spotifyApi.getAccessToken()){
+      spotifyApi
       .getPlaylist(router.query.id, { limit: 50, offset: 5 })
       .then((data) => {
         setPlaylist(data?.body);
       })
       .catch((err) => console.log("Something went wrong!", err));
-  }, [spotifyApi, router.query.id]);
+    }
+  }, [spotifyApi, session, router.query.id]);
 
   const [playlistName, setPlaylistName] = useState("");
 
@@ -169,7 +171,7 @@ function CenterPlaylist() {
         </section>
       )}
       <div>
-        <Songs songs={playlist?.tracks?.items} />
+        <Songs songs={playlist?.tracks?.items} isAlbum={false} useHeigthScreen={'h-screen'} />
       </div>
       {/* {router.query.custom === "false"  ?
   (

@@ -1,5 +1,5 @@
 import useSpotify from "@/hooks/useSpotify";
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/solid";
 import { shuffle } from "lodash";
 import { signOut, useSession } from "next-auth/react";
@@ -125,7 +125,6 @@ function CenterCategory() {
                   {playlist?.description}
                 </p>
               </div>
-              // </div>
             ))}
           </div>
         </section>

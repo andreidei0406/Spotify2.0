@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronLeftIcon } from "@heroicons/react/solid";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
@@ -94,7 +94,7 @@ function CenterAlbum() {
       </section>
 
       <div>
-        <Songs songs={album?.tracks.items} albumImage={album?.images?.[0].url}/>
+        <Songs songs={album?.tracks.items} albumImage={album?.images?.[0].url} isAlbum={true} useHeigthScreen={'h-screen'}/>
       </div>
     </div>
   );

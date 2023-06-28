@@ -67,21 +67,18 @@ function SearchComponent() {
   );
 
   useEffect(() => {
-    const fetchTopTracks = async () => {
-      if (typeof artists !== undefined && spotifyApi.getAccessToken()) {
-        await spotifyApi
-          .getArtistTopTracks(artists?.[0]?.id, "RO")
-          .then((data) => {
-            console.log(data);
-            setArtistTopTracks(data.body.tracks);
-            console.log(artistTopTracks);
-          })
-          .catch((err) => {
-            console.error("Couldn't get artist top tracks", err);
-          });
-      }
-    };
-    fetchTopTracks();
+    if (typeof artists !== undefined && spotifyApi.getAccessToken()) {
+      spotifyApi
+        .getArtistTopTracks(artists?.[0]?.id, "RO")
+        .then((data) => {
+          console.log(data);
+          setArtistTopTracks(data.body.tracks);
+          console.log(artistTopTracks);
+        })
+        .catch((err) => {
+          console.error("Couldn't get artist top tracks", err);
+        });
+    }
     setIsLoading(false);
   }, [artists, spotifyApi]);
 
@@ -102,10 +99,10 @@ function SearchComponent() {
 
   return (
     <div className="flex-grow bg-slate-800 h-screen overflow-y-scroll scrollbar-hide pb-36">
-      <header className="absolute top-5 right-8">
+      <header className="relative">
         <div
-          className="hidden sm:inline-flex items-center bg-black space-x-3 opacity-90 
-          hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
+          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
+        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
           <img
@@ -196,7 +193,7 @@ function SearchComponent() {
                     {isLoading ? (
                       <div></div>
                     ) : (
-                      <Songs ignoreAlbumName={true} songs={tracks} />
+                      <Songs ignoreAlbumName={true} songs={tracks}/>
                     )}
                   </div>
                 </div>
