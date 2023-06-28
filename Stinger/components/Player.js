@@ -1,4 +1,8 @@
-import { currentTrackIdState, isPlayingState, isRepeatState } from "@/atoms/songAtom";
+import {
+  currentTrackIdState,
+  isPlayingState,
+  isRepeatState,
+} from "@/atoms/songAtom";
 import useSongInfo from "@/hooks/useSongInfo";
 import useSpotify from "@/hooks/useSpotify";
 import {
@@ -19,8 +23,10 @@ import { queueIdState } from "@/atoms/queueAtoms";
 import { seekerState } from "@/atoms/seekerAtoms";
 import { durationState } from "@/atoms/durationAtoms";
 import { millisToMinutesAndSeconds } from "@/lib/time";
+import { useRouter } from "next/router";
 
 function Player() {
+  const router = useRouter();
   const spotifyApi = useSpotify();
   const { data: session, status } = useSession();
   const [currentTrackId, setCurrentTrackId] =
@@ -36,7 +42,7 @@ function Player() {
   const [repeat, setRepeat] = useRecoilState(isRepeatState);
 
   const fetchCurrentSong = () => {
-    if (!songInfo) {
+    if (!songInfo && spotifyApi.getAccessToken()) {
       spotifyApi
         .getMyCurrentPlayingTrack()
         .then((data) => {
@@ -55,16 +61,18 @@ function Player() {
   };
 
   const handlePlayPause = () => {
-    spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body?.is_playing) {
-        // console.log(data.body);
-        spotifyApi.pause();
-        setIsPlaying(false);
-      } else {
-        spotifyApi.play();
-        setIsPlaying(true);
-      }
-    });
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi.getMyCurrentPlaybackState().then((data) => {
+        if (data.body?.is_playing) {
+          // console.log(data.body);
+          spotifyApi.pause();
+          setIsPlaying(false);
+        } else {
+          spotifyApi.play();
+          setIsPlaying(true);
+        }
+      });
+    }
   };
 
   const playSong = (id) => {
@@ -76,21 +84,27 @@ function Player() {
   };
 
   const skipNext = () => {
+    console.log(queue);
     let index = 0;
     queue.forEach((element, i) => {
-      if (element?.track?.id === currentTrackId) {
+      if (
+        element?.track?.id === currentTrackId ||
+        element?.id === currentTrackId
+      ) {
         index = i;
       }
     });
     if (index + 1 > queue.length) {
-      setCurrentTrackId(queue[0].track.id);
-      setDuration(queue[0].track.duration_ms);
+      setCurrentTrackId(queue[0]?.track?.id ?? queue[0].id);
+      setDuration(queue[0]?.track?.duration_ms ?? queue[0].duration_ms);
       spotifyApi.pause();
       setIsPlaying(false);
     } else {
-      setCurrentTrackId(queue[index + 1].track.id);
-      setDuration(queue[index + 1].track.duration_ms);
-      playSong(queue[index + 1].track.id);
+      setCurrentTrackId(queue[index + 1]?.track?.id ?? queue[index + 1].id);
+      setDuration(
+        queue[index + 1]?.track?.duration_ms ?? queue[index + 1].duration_ms
+      );
+      playSong(queue[index + 1]?.track?.id ?? queue[index + 1].id);
     }
   };
 
@@ -122,7 +136,7 @@ function Player() {
   });
 
   useEffect(() => {
-    if (volume > 0 && volume < 100) {
+    if (spotifyApi.getAccessToken() && volume > 0 && volume < 100) {
       debouncedAdjustVolume(volume);
     }
   }, [volume]);
@@ -135,13 +149,15 @@ function Player() {
   );
 
   useEffect(() => {
-    spotifyApi
+    if(spotifyApi.getAccessToken()){
+      spotifyApi
       .getMyCurrentPlaybackState()
       .then((data) => {
         // console.log(data.body);
         setSeeker(millisToMinutesAndSeconds(data.body?.progress_ms));
       })
       .catch((err) => console.error("Can't seek: ", err));
+    }
   }, [seeker, isPlaying, session, currentTrackId, spotifyApi]);
 
   const toggleShuffle = () => {
@@ -154,20 +170,20 @@ function Player() {
   };
 
   const toggleReplay = () => {
-    if(!repeat){
+    if (!repeat) {
       spotifyApi
-      .setRepeat("track")
-      .then(() => {
-        setRepeat(!repeat);
-      })
-      .catch((err) => console.error("Couldn't set repeat", err));
+        .setRepeat("track")
+        .then(() => {
+          setRepeat(!repeat);
+        })
+        .catch((err) => console.error("Couldn't set repeat", err));
     } else {
       spotifyApi
-      .setRepeat("off")
-      .then(() => {
-        setRepeat(!repeat);
-      })
-      .catch((err) => console.error("Couldn't set repeat", err));
+        .setRepeat("off")
+        .then(() => {
+          setRepeat(!repeat);
+        })
+        .catch((err) => console.error("Couldn't set repeat", err));
     }
   };
 
@@ -192,8 +208,23 @@ function Player() {
           alt=""
         />
         <div>
-          <h3>{songInfo?.name}</h3>
-          <p>{songInfo?.artists?.[0].name}</p>
+          <h3
+            className="hover:underline hover:cursor-pointer"
+            onClick={() => {}}
+          >
+            {songInfo?.name}
+          </h3>
+          <p
+            className="hover:underline hover:cursor-pointer"
+            onClick={() => {
+              router.push({
+                pathname: "/artist/[id]",
+                query: { id: songInfo?.artists?.[0]?.id },
+              });
+            }}
+          >
+            {songInfo?.artists?.[0].name}
+          </p>
         </div>
       </div>
       {/* center */}
@@ -215,7 +246,10 @@ function Player() {
           )}
           <FastForwardIcon className="button" onClick={skipNext} />
           {repeat ? (
-            <ReplyIcon className="button text-green-500" onClick={toggleReplay}/>
+            <ReplyIcon
+              className="button text-green-500"
+              onClick={toggleReplay}
+            />
           ) : (
             <ReplyIcon className="button" onClick={toggleReplay} />
           )}

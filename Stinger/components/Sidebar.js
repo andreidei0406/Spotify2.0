@@ -21,7 +21,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState([]);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const router = useRouter();
-  const [library, setLibrary] = useRecoilState(libraryState);
+  const [libraryView, setLibraryView] = useRecoilState(libraryState);
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists({ limit: 50, offset: 1 }).then((data) => {
@@ -31,7 +31,7 @@ function Sidebar() {
   }, [session, spotifyApi]);
 
   const toggleLibrary = () =>{
-    setLibrary(!library);
+    setLibraryView(!libraryView);
   }
 
   const createPlaylist = () => {
@@ -48,7 +48,7 @@ function Sidebar() {
   };
 
   return (
-    library ? (
+    libraryView ? (
     <div
       className="bg-slate-800 text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
     overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[15rem] lg:max-w-[20rem]
@@ -116,7 +116,6 @@ function Sidebar() {
               {playlist.name}
             </p>
           </div>
-          // <PlaylistSidebar key={playlist.id} playlist={playlist}/>
         ))}
       </div>
     </div> ) : (

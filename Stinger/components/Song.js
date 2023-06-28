@@ -23,6 +23,7 @@ function Song({
   isLikedByUser,
   songs,
   albumImage,
+  ignoreAlbumName,
 }) {
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
@@ -45,7 +46,7 @@ function Song({
   };
 
   const removeFromLiked = () => {
-    console.log(track)
+    console.log(track);
     spotifyApi
       .removeFromMySavedTracks(track?.id)
       .then(() => console.log(isLikedByUser))
@@ -78,9 +79,14 @@ function Song({
       </div>
 
       <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
-        <p className="w-40 hidden sm:inline">
-          {track?.album?.name ?? track?.name}
-        </p>
+        {ignoreAlbumName ? (
+          <div></div>
+        ) : (
+          <p className="w-40 hidden sm:inline">
+            {track?.album?.name ?? track?.name}
+          </p>
+        )}
+
         <p>{millisToMinutesAndSeconds(track?.duration_ms)}</p>
         {isLikedByUser ? (
           <div>
@@ -88,8 +94,8 @@ function Song({
               <BlankHeartIcon
                 className="button select-none"
                 onClick={() => {
-                  addToLiked
-                  setIsActive(!isActive)
+                  addToLiked;
+                  setIsActive(!isActive);
                 }}
               />
             ) : (

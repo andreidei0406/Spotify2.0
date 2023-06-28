@@ -95,10 +95,10 @@ function HomeCenter() {
 
   return (
     <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="relative">
+      <header className="absolute top-5 right-8">
         <div
-          className="absolute hidden sm:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
-    hover:opacity-70 cursor-pointer rounded-full text-white"
+          className="hidden sm:inline-flex items-center bg-black space-x-3 opacity-90 
+          hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
           <img
@@ -229,7 +229,9 @@ function HomeCenter() {
                   <h1 className="hidden xs:flex text-sm md:text-lg xl:text-xl font-bold">
                     {playlist?.name}
                   </h1>
-                  <p className="hidden xs:flex overflow-hidden">{playlist?.description}</p>
+                  <p className="hidden xs:flex overflow-hidden">
+                    {playlist?.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -244,39 +246,31 @@ function HomeCenter() {
           <div className="">
             {topSongs.map((song, i) => (
               <div
-              className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900
+                className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900
             rounded-lg cursor-pointer"
-              // onDoubleClick={playSong}
-              key={song.id}
-            >
-              <div className="flex items-center space-x-4">
-                <p>{i + 1}</p>
-                <img
-                  className="h-10 w-10 xxs:w-8 xxs:h-8"
-                  src={song?.album?.images?.[0]?.url}
-                  alt=""
-                />
-                <div className="hidden xs:block">
-                  <p className="w-36 md:w-64 lg:w-80 truncate text-white">
-                    {song.name}
-                  </p>
-                  <p className="w-40">
-                    cineva
-                  </p>
+                // onDoubleClick={playSong}
+                key={song.id}
+              >
+                <div className="flex items-center space-x-4">
+                  <p>{i + 1}</p>
+                  <img
+                    className="h-10 w-10 xxs:w-8 xxs:h-8"
+                    src={song?.album?.images?.[0]?.url}
+                    alt=""
+                  />
+                  <div className="hidden xs:block">
+                    <p className="w-36 md:w-64 lg:w-80 truncate text-white">
+                      {song.name}
+                    </p>
+                    <p className="w-40">cineva</p>
+                  </div>
+                </div>
+
+                <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
+                  <p className="w-40 hidden sm:inline">cinvea</p>
+                  <p>{millisToMinutesAndSeconds(20000)}</p>
                 </div>
               </div>
-        
-              <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
-                <p className="w-40 hidden sm:inline">
-                  cinvea
-                </p>
-                <p>
-                  {millisToMinutesAndSeconds(
-                    20000
-                  )}
-                </p>
-              </div>
-            </div>
             ))}
           </div>
         </section>

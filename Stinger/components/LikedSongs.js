@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import Songs from "./Songs";
 import { queueIdState } from "@/atoms/queueAtoms";
 import { LogoutIcon } from "@heroicons/react/solid";
+import useLikedSongs from "@/hooks/useLikedSongs";
 
 const colors = [
   "from-indigo-500",
@@ -16,8 +17,6 @@ const colors = [
   "from-purple-500",
   "from-sky-500",
 ];
-
-let i = 0;
 
 function LikedSongs() {
   const [queue, setQueue] = useRecoilState(queueIdState);
@@ -33,9 +32,10 @@ function LikedSongs() {
       total.push(param);
     },
   ] = useState(null);
-  const likedSongs = useLikedSongs();
 
-  
+  // all songs, but it will take time to load + maybe the pc is gonna explode
+  // const likedSongs = useLikedSongs();
+
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [router.query.id]);
@@ -48,14 +48,13 @@ function LikedSongs() {
 
   useEffect(() => {
     spotifyApi
-      .getMySavedTracks({ limit: 50, offset: random(700, false) })
+      .getMySavedTracks({ limit: 50 })
       .then((data) => {
         setLiked(data.body?.items);
       })
       .catch((err) => console.log("Something went wrong!", err));
   }, [spotifyApi]);
 
-  console.log(likedSongs);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">

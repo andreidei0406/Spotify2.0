@@ -84,7 +84,7 @@ function CenterPlaylist() {
       })
       .catch((err) => console.error(err));
   };
-  console.log(playlist);
+  console.log(playlist?.description.toString());
 
   return (
     <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">

@@ -1,32 +1,36 @@
-import { currentTrackIdState } from "@/atoms/songAtom";
-import useSpotify from "./useSpotify";
-import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
-import { likedState } from "@/atoms/likedAtoms";
+import useSpotify from "./useSpotify";
+
+var allSongs = [];
 
 function useLikedSongs() {
   const spotifyApi = useSpotify();
-  const [liked, setLiked] =
-    useRecoilState(likedState);
-
+  const [nextUrl, setNextUrl] = useState(
+    "https://api.spotify.com/v1/me/tracks"
+  );
   useEffect(() => {
     const fetchLikedSongs = async (url) => {
-        const songs = await fetch(url,
-          {
-            headers: {
-              Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-            },
-            method: 'GET'
-          }
-        ).then((res) => {res.json();
-        console.log(res)}).catch((err) => console.log("Unable to fetch liked songs", err));
+      const songs = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+        },
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .catch((err) => console.log("Unable to fetch liked songs", err));
+      console.log(songs);
+      songs.items.map((track) => {
+        allSongs.push(track.track);
+      })
+      if (songs.next !== null) {
+        setNextUrl(songs.next);
+      }
+      console.log(nextUrl);
+    };
+    fetchLikedSongs(nextUrl);
+  }, [spotifyApi, nextUrl]);
 
-        setLiked(songs);
-    }
-    fetchLikedSongs(`https://api.spotify.com/v1/me/tracks/`);
-  }, [spotifyApi]);
-
-  return liked;
+  return allSongs;
 }
 
 export default useLikedSongs;

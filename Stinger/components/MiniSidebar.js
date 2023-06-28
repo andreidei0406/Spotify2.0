@@ -20,7 +20,7 @@ function MiniSidebar() {
   const [playlists, setPlaylists] = useState([]);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const router = useRouter();
-  const [library, setLibrary] = useRecoilState(libraryState);
+  const [libraryView, setLibraryView] = useRecoilState(libraryState);
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists({ limit: 50, offset: 1 }).then((data) => {
@@ -30,13 +30,13 @@ function MiniSidebar() {
   }, [session, spotifyApi]);
 
   const toggleLibrary = () =>{
-    setLibrary(!library);
+    setLibraryView(!libraryView);
   }
 
   return (
     
     <div
-      className="text-gray-500 p-5 text-center lg:text-sm border-r border-gray-900 
+      className="text-gray-500 bg-slate-800 p-5 text-center lg:text-sm border-r border-gray-900 
     overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[5rem]
     hidden md:inline-flex pb-36"
     >
