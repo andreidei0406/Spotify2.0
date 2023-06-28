@@ -21,7 +21,8 @@ function Songs({
   songs,
   albumImage,
   ignoreAlbumName,
-  useHeigthScreen
+  useHeigthScreen,
+  ignoreHeader,
 }) {
   const { data: session, status } = useSession();
 
@@ -76,7 +77,14 @@ function Songs({
   };
 
   const playGame = () => {
-    if (router.pathname.includes("playlist")) {
+    if (router.pathname.includes("album")) {
+      const artists = [];
+      songs.map((item) => {
+        artists.push(item?.artists?.[0]);
+      });
+      setSongGame(songs);
+      setArtistGame(artists);
+    } else {
       const gameSongs = [];
       const artists = [];
       songs.map((item) => {
@@ -84,13 +92,6 @@ function Songs({
         artists.push(item?.track?.artists?.[0]);
       });
       setSongGame(gameSongs);
-      setArtistGame(artists);
-    } else {
-      const artists = [];
-      songs.map((item) => {
-        artists.push(item?.artists?.[0]);
-      });
-      setSongGame(songs);
       setArtistGame(artists);
     }
 
@@ -126,8 +127,12 @@ function Songs({
 
   console.log(songs);
   return (
-    <div className={`bg-slate-800 ${useHeigthScreen ?? ''} px-8 flex flex-col space-y-1 pb-28 text-white`}>
-      {ignoreAlbumName ? (
+    <div
+      className={`bg-slate-800 ${
+        useHeigthScreen ?? ""
+      } px-8 flex flex-col space-y-1 pb-28 text-white`}
+    >
+      {ignoreHeader ? (
         <div></div>
       ) : (
         <div className="">
@@ -158,7 +163,8 @@ function Songs({
           albumImage={
             albumImage ??
             track?.track?.album?.images?.[0]?.url ??
-            track?.album?.images?.[0]?.url
+            track?.album?.images?.[0]?.url ??
+            track?.album?.images?.[1]?.url
           }
           ignoreAlbumName={ignoreAlbumName}
         />

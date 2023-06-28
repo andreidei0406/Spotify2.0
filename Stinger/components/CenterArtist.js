@@ -109,7 +109,7 @@ function CenterArtist() {
       </section>
 
       <div>
-        <Songs songs={artistTopSongs} />
+        <Songs songs={artistTopSongs} isAlbum={true} />
       </div>
     </div>
   );

@@ -94,7 +94,10 @@ function GameSong() {
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
-          onClick={signOut}
+        onClick={() => {
+          spotifyApi.pause();
+          signOut;
+        }}
         >
           <img
             className="rounded-full w-10 h-10"
@@ -140,8 +143,8 @@ function GameSong() {
                             router.replace({
                               pathname: "/game",
                               query: {
+                                album: router.query.album,
                                 winner: checkWinner(song?.id),
-                                album: true,
                               },
                             });
                           }}

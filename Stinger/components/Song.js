@@ -2,7 +2,7 @@ import { albumIdState, albumState } from "@/atoms/albumAtoms";
 import { durationState } from "@/atoms/durationAtoms";
 import { likedState } from "@/atoms/likedAtoms";
 import { playlistState } from "@/atoms/playlistAtoms";
-import { queueIdState } from "@/atoms/queueAtoms";
+import { oldQueueState, queueIdState } from "@/atoms/queueAtoms";
 import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import useSpotify from "@/hooks/useSpotify";
 import { millisToMinutesAndSeconds } from "@/lib/time";
@@ -29,6 +29,8 @@ function Song({
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [queue, setQueue] = useRecoilState(queueIdState);
+  const [oldQueue, setOldQueue] = useRecoilState(oldQueueState);
+
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [duration, setDuration] = useRecoilState(durationState);
   const [isActive, setIsActive] = useState(false);
@@ -43,12 +45,13 @@ function Song({
     });
     setDuration(track?.duration_ms);
     setQueue(songs);
+    setOldQueue(songs);
   };
 
   const removeFromLiked = () => {
     console.log(track);
     spotifyApi
-      .removeFromMySavedTracks(track?.id)
+      .removeFromMySavedTracks([track?.id])
       .then(() => console.log(isLikedByUser))
       .catch((err) => console.error("Couldn't remove track", err));
   };
@@ -74,7 +77,9 @@ function Song({
           <p className="w-36 md:w-64 lg:w-80 truncate text-white">
             {track?.name}
           </p>
-          <p className="w-40">{track?.artists[0].name}</p>
+          {track.artists.map((artist) => (
+            <p key={artist.id} className="w-40">{artist.name}</p>
+          ))}
         </div>
       </div>
 
@@ -94,7 +99,7 @@ function Song({
               <BlankHeartIcon
                 className="button select-none"
                 onClick={() => {
-                  addToLiked;
+                  addToLiked();
                   setIsActive(!isActive);
                 }}
               />
@@ -102,7 +107,7 @@ function Song({
               <HeartIcon
                 className="button select-none"
                 onClick={() => {
-                  removeFromLiked;
+                  removeFromLiked();
                   setIsActive(!isActive);
                 }}
               />
@@ -114,7 +119,7 @@ function Song({
               <HeartIcon
                 className="button select-none"
                 onClick={() => {
-                  removeFromLiked;
+                  removeFromLiked();
                   setIsActive2(!isActive2);
                 }}
               />
@@ -122,7 +127,7 @@ function Song({
               <BlankHeartIcon
                 className="button select-none"
                 onClick={() => {
-                  addToLiked;
+                  addToLiked();
                   setIsActive2(!isActive2);
                 }}
               />

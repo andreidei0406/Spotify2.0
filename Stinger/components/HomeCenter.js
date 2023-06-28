@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { selector, useRecoilState } from "recoil";
 import Song from "./Song";
 import { millisToMinutesAndSeconds } from "@/lib/time";
+import Songs from "./Songs";
 
 const colors = [
   "from-indigo-500",
@@ -82,8 +83,8 @@ function HomeCenter() {
     if (spotifyApi.getAccessToken()) {
       spotifyApi
         .getRecommendations({
-          seed_genres: ["party", "dance"],
-          target_popularity: 70,
+          seed_genres: ["party", "dance", "edm", "club", "summer"],
+          target_popularity: 80,
         })
         .then((data) => {
           console.log(data.body.tracks);
@@ -243,36 +244,9 @@ function HomeCenter() {
           </h1>
         </div>
         <section className="">
-          <div className="">
-            {topSongs.map((song, i) => (
-              <div
-                className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900
-            rounded-lg cursor-pointer"
-                // onDoubleClick={playSong}
-                key={song.id}
-              >
-                <div className="flex items-center space-x-4">
-                  <p>{i + 1}</p>
-                  <img
-                    className="h-10 w-10 xxs:w-8 xxs:h-8"
-                    src={song?.album?.images?.[0]?.url}
-                    alt=""
-                  />
-                  <div className="hidden xs:block">
-                    <p className="w-36 md:w-64 lg:w-80 truncate text-white">
-                      {song.name}
-                    </p>
-                    <p className="w-40">cineva</p>
-                  </div>
-                </div>
-
-                <div className="hidden xs:flex items-center justify-between ml-auto md:ml-0">
-                  <p className="w-40 hidden sm:inline">cinvea</p>
-                  <p>{millisToMinutesAndSeconds(20000)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="py-5">
+            <Songs songs={topSongs} ignoreHeader={true}/>
+          </div> 
         </section>
       </div>
       <section className="flex items-end space-x-7 bg-gradient-to-b  h-80 text-white p-8"></section>

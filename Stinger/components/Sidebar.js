@@ -50,7 +50,7 @@ function Sidebar() {
   return (
     libraryView ? (
     <div
-      className="bg-slate-800 text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
+      className="bg-slate-800 select-none text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 
     overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[15rem] lg:max-w-[20rem]
     hidden md:inline-flex pb-36"
     >

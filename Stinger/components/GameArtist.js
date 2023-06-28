@@ -58,8 +58,8 @@ function GameArtist() {
       const songs = [];
       for (let i = 0; i < 4; i++) {
         let randomIndex = random(songGame.length - 1, false);
-        while (songs.includes(songGame[randomIndex])) {
-          randomIndex = random(songGame.length - 1, false);
+        while (artists.includes(artistGame[randomIndex])) {
+          randomIndex = random(artistGame.length - 1, false);
         }
         songs.push(songGame[randomIndex]);
         artists.push(artistGame[randomIndex]);
@@ -97,7 +97,10 @@ function GameArtist() {
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
         hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
-          onClick={signOut}
+          onClick={() => {
+            spotifyApi.pause();
+            signOut;
+          }}
         >
           <img
             className="rounded-full w-10 h-10"
@@ -142,7 +145,10 @@ function GameArtist() {
                             console.log(artist.id);
                             router.replace({
                               pathname: "/game",
-                              query: { winner: checkWinner(artist?.id) },
+                              query: {
+                                album: router.query.album,
+                                winner: checkWinner(artist?.id),
+                              },
                             });
                           }}
                         >

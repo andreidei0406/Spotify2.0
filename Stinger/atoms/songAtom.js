@@ -10,7 +10,12 @@ export const isPlayingState = atom({
   default: false,
 });
 
-export const isRepeatState = atom ({
+export const isRepeatState = atom({
   key: "isRepeatState",
   default: false,
-})
+});
+
+export const isShuffleState = atom({
+  key: "isShuffleState",
+  default: false,
+});

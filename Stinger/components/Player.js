@@ -2,6 +2,7 @@ import {
   currentTrackIdState,
   isPlayingState,
   isRepeatState,
+  isShuffleState,
 } from "@/atoms/songAtom";
 import useSongInfo from "@/hooks/useSongInfo";
 import useSpotify from "@/hooks/useSpotify";
@@ -19,11 +20,12 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { debounce } from "lodash";
-import { queueIdState } from "@/atoms/queueAtoms";
+import { oldQueueState, queueIdState } from "@/atoms/queueAtoms";
 import { seekerState } from "@/atoms/seekerAtoms";
 import { durationState } from "@/atoms/durationAtoms";
 import { millisToMinutesAndSeconds } from "@/lib/time";
 import { useRouter } from "next/router";
+import { shuffle } from "lodash";
 
 function Player() {
   const router = useRouter();
@@ -35,10 +37,12 @@ function Player() {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [volume, setVolume] = useState(50);
   const [queue, setQueue] = useRecoilState(queueIdState);
+  const [oldQueue, setOldQueue] = useRecoilState(oldQueueState);
+
   const [seeker, setSeeker] = useRecoilState(seekerState);
   const [duration, setDuration] = useRecoilState(durationState);
   const songInfo = useSongInfo();
-  const [shuffle, setShuffle] = useState(false);
+  const [shuffleMe, setShuffleMe] = useState(isShuffleState);
   const [repeat, setRepeat] = useRecoilState(isRepeatState);
 
   const fetchCurrentSong = () => {
@@ -46,11 +50,10 @@ function Player() {
       spotifyApi
         .getMyCurrentPlayingTrack()
         .then((data) => {
-          // console.log("Now playing: ", data.body?.item);
           setCurrentTrackId(data.body?.item.id);
           setDuration(millisToMinutesAndSeconds(data.body?.item.duration_ms));
-          // console.log(duration);
           spotifyApi.getMyCurrentPlaybackState().then((data) => {
+            console.log(data);
             setIsPlaying(data.body?.is_playing);
           });
         })
@@ -109,14 +112,26 @@ function Player() {
   };
 
   const skipPrevious = () => {
-    const index = queue.indexOf(currentTrackId);
+    let index = 0;
+    queue.forEach((element, i) => {
+      if (
+        element?.track?.id === currentTrackId ||
+        element?.id === currentTrackId
+      ) {
+        index = i;
+      }
+    });
     if (index - 1 < 0) {
-      setCurrentTrackId(queue[0]);
-      setDuration(queue[0].duration_ms);
+      setCurrentTrackId(queue[0]?.track?.id ?? queue[0].id);
+      setDuration(queue[0]?.track?.duration_ms ?? queue[0].duration_ms);
+      spotifyApi.pause();
+      setIsPlaying(false);
     } else {
-      setCurrentTrackId(queue[index - 1].id);
-      setDuration(queue[index - 1].duration_ms);
-      playSong(queue[index - 1].id);
+      setCurrentTrackId(queue[index - 1]?.track?.id ?? queue[index - 1].id);
+      setDuration(
+        queue[index - 1]?.track?.duration_ms ?? queue[index - 1].duration_ms
+      );
+      playSong(queue[index - 1]?.track?.id ?? queue[index - 1].id);
     }
   };
 
@@ -129,7 +144,6 @@ function Player() {
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !currentTrackId) {
-      //fetch song info
       fetchCurrentSong();
       setVolume(50);
     }
@@ -149,24 +163,31 @@ function Player() {
   );
 
   useEffect(() => {
-    if(spotifyApi.getAccessToken()){
+    if (spotifyApi.getAccessToken()) {
       spotifyApi
-      .getMyCurrentPlaybackState()
-      .then((data) => {
-        // console.log(data.body);
-        setSeeker(millisToMinutesAndSeconds(data.body?.progress_ms));
-      })
-      .catch((err) => console.error("Can't seek: ", err));
+        .getMyCurrentPlaybackState()
+        .then((data) => {
+          // console.log(data.body);
+          setSeeker(millisToMinutesAndSeconds(data.body?.progress_ms));
+        })
+        .catch((err) => console.error("Can't seek: ", err));
     }
   }, [seeker, isPlaying, session, currentTrackId, spotifyApi]);
 
   const toggleShuffle = () => {
-    spotifyApi
-      .setShuffle(!shuffle)
-      .then(() => {
-        setShuffle(!shuffle);
-      })
-      .catch((err) => console.error("Couldn't set shuffle", err));
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi
+        .setShuffle(!shuffleMe)
+        .then(() => {
+          if (shuffleMe) {
+            setQueue(shuffle(queue));
+          } else {
+            setQueue(oldQueue);
+          }
+          setShuffleMe(!shuffleMe);
+        })
+        .catch((err) => console.error("Couldn't set shuffle", err));
+    }
   };
 
   const toggleReplay = () => {
@@ -187,32 +208,25 @@ function Player() {
     }
   };
 
-  // useEffect(() =>{
-  //   spotifyApi.getMyCurrentPlaybackState()
-  //   .then((data) => {
-  //   })
-  //   .catch((err) => console.error("Can't seek: ", err));
-  // })
-
-  // console.log(seeker);
+  console.log("SHUFFLE QUUEUEUE", queue);
   return (
     <div
-      className="h-24 hidden bg-gradient-to-b from-slate-800 to-black text-white
+      className="h-24 select-none hidden bg-gradient-to-b from-slate-800 to-black text-white
     xs:grid xs:grid-cols-3 text-cs md:text-base px-2 md:px-8"
     >
       <div className="flex items-center space-x-4">
         <img
-          className="hidden md:inline h-10 w-10"
+          className="hidden md:inline h-10 w-10 hover:cursor-pointer hover:opacity-80"
           src={songInfo?.album.images?.[0]?.url}
           alt=""
+          onClick={() => {
+            router.replace({
+              pathname: "/screensaver",
+            });
+          }}
         />
         <div>
-          <h3
-            className="hover:underline hover:cursor-pointer"
-            onClick={() => {}}
-          >
-            {songInfo?.name}
-          </h3>
+          <h3 className="">{songInfo?.name}</h3>
           <p
             className="hover:underline hover:cursor-pointer"
             onClick={() => {
@@ -228,13 +242,13 @@ function Player() {
       </div>
       <div className="mt-5">
         <div className="flex items-center justify-evenly">
-          {shuffle ? (
+          {shuffleMe ? (
+            <SwitchHorizontalIcon className="button" onClick={toggleShuffle} />
+          ) : (
             <SwitchHorizontalIcon
               className="button text-green-500"
               onClick={toggleShuffle}
             />
-          ) : (
-            <SwitchHorizontalIcon className="button" onClick={toggleShuffle} />
           )}
           <RewindIcon className="button" onClick={skipPrevious} />
           {isPlaying ? (
@@ -262,7 +276,7 @@ function Player() {
               seekTo(Number(e.target.value));
             }}
             min={0}
-            max={duration} // track.duration
+            max={duration}
           />
         </div>
       </div>

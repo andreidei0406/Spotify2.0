@@ -112,7 +112,7 @@ function LikedSongs() {
         </div>
       </section>
 
-      <div><Songs songs={liked} /></div>
+      <div><Songs songs={liked}/></div>
     </div>
   );
 }

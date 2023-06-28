@@ -98,6 +98,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:true}
                   });
                 }}
               >
@@ -112,6 +113,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
+                    query: {album:false}
                   });
                 }}
               >
@@ -123,6 +125,8 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:false}
+
                   });
                 }}
               >
@@ -147,6 +151,8 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:true}
+
                   });
                 }}
               >
@@ -161,6 +167,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
+                    query: {album:false}
                   });
                 }}
               >
@@ -172,6 +179,8 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:false}
+
                   });
                 }}
               >
@@ -196,6 +205,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:true}
                   });
                 }}
               >
@@ -210,6 +220,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
+                    query: {album:false}
                   });
                 }}
               >
@@ -221,6 +232,7 @@ function GameComponent() {
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
+                    query: {album:false}
                   });
                 }}
               >

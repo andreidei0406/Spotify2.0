@@ -5,6 +5,11 @@ export const queueState = atom({
   default: null,
 });
 
+export const oldQueueState = atom({
+  key: "oldQueueState",
+  default: null,
+});
+
 export const queueIdState = atom({
   key: "queueIdState",
   default: "",
