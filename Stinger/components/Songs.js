@@ -1,18 +1,15 @@
-import { playlistIdState, playlistState } from "@/atoms/playlistAtoms";
-import { useRecoilState, useRecoilValue } from "recoil";
-import Song from "./Song";
-import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
-import { PlayIcon } from "@heroicons/react/solid";
-import useSpotify from "@/hooks/useSpotify";
-import { albumState } from "@/atoms/albumAtoms";
-import { random, shuffle } from "lodash";
-import { likeState, likedState } from "@/atoms/likedAtoms";
+import { gameArtistState, gameSongState } from "@/atoms/gameAtom";
+import { playlistState } from "@/atoms/playlistAtoms";
 import { queueIdState } from "@/atoms/queueAtoms";
-import { useEffect, useState } from "react";
+import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
+import useSpotify from "@/hooks/useSpotify";
+import { PlayIcon, PuzzleIcon } from "@heroicons/react/solid";
+import { random, shuffle } from "lodash";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { PuzzleIcon } from "@heroicons/react/solid";
-import { gameArtistState, gameSongState } from "@/atoms/gameAtom";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import Song from "./Song";
 
 function Songs({
   isAlbum,

@@ -70,7 +70,7 @@ function ScreensaverComponent() {
           <div className="text-center">
             <h1 className="text-2xl">{songInfo?.name}</h1>
             {songInfo?.artists?.map((artist, i) =>(
-                <span className="text-2xl">{artist.name} </span>
+                <span key={i} className="text-2xl">{artist.name} </span>
             ))}
             <h1 className="text-2xl">Popularity {songInfo?.popularity}%</h1>
           </div>

@@ -1,10 +1,9 @@
 import { gameSongState } from "@/atoms/gameAtom";
 import { currentTrackIdState } from "@/atoms/songAtom";
-import { winnerState } from "@/atoms/winnerAtom";
 import useSpotify from "@/hooks/useSpotify";
-import { LightningBoltIcon, LogoutIcon, XIcon } from "@heroicons/react/solid";
+import { LightningBoltIcon, XIcon } from "@heroicons/react/solid";
 import { random, shuffle } from "lodash";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
@@ -116,10 +115,9 @@ function GameSong() {
                   <h1>Please choose one option!</h1>
                   <div className="text-center text-black py-5">
                     {displayedSongs.map((song, i) => (
-                      <div className="py-5">
+                      <div className="py-5" key={song?.id}>
                         <p
                           className="hover:cursor-pointer hover:underline"
-                          key={song?.id}
                           onClick={() => {
                             console.log(song.id);
                             router.replace({

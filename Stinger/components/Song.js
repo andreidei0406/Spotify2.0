@@ -1,18 +1,12 @@
-import { albumIdState, albumState } from "@/atoms/albumAtoms";
 import { durationState } from "@/atoms/durationAtoms";
-import { likedState } from "@/atoms/likedAtoms";
-import { playlistState } from "@/atoms/playlistAtoms";
 import { oldQueueState, queueIdState } from "@/atoms/queueAtoms";
 import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import useSpotify from "@/hooks/useSpotify";
 import { millisToMinutesAndSeconds } from "@/lib/time";
-import { HeartIcon } from "@heroicons/react/solid";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
 import { HeartIcon as BlankHeartIcon } from "@heroicons/react/outline";
-import { add } from "lodash";
+import { HeartIcon } from "@heroicons/react/solid";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
 
 function Song({
   order,

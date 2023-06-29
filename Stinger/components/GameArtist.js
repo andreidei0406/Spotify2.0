@@ -119,10 +119,9 @@ function GameArtist() {
                   <h1>Please choose one option!</h1>
                   <div className="text-center text-black py-5">
                     {displayedArtists.map((artist, i) => (
-                      <div className="py-5">
+                      <div className="py-5" key={artist?.id}>
                         <p
                           className="hover:cursor-pointer hover:underline"
-                          key={artist?.id}
                           onClick={() => {
                             console.log(artist.id);
                             router.replace({

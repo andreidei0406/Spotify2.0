@@ -1,3 +1,6 @@
+import { durationState } from "@/atoms/durationAtoms";
+import { oldQueueState, queueIdState } from "@/atoms/queueAtoms";
+import { seekerState } from "@/atoms/seekerAtoms";
 import {
   currentTrackIdState,
   isPlayingState,
@@ -7,6 +10,8 @@ import {
 } from "@/atoms/songAtom";
 import useSongInfo from "@/hooks/useSongInfo";
 import useSpotify from "@/hooks/useSpotify";
+import { millisToMinutesAndSeconds } from "@/lib/time";
+import { VolumeUpIcon as VolumeDownIcon } from "@heroicons/react/outline";
 import {
   FastForwardIcon,
   PauseIcon,
@@ -16,17 +21,11 @@ import {
   SwitchHorizontalIcon,
   VolumeUpIcon,
 } from "@heroicons/react/solid";
-import { VolumeUpIcon as VolumeDownIcon } from "@heroicons/react/outline";
+import { debounce, shuffle } from "lodash";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { debounce } from "lodash";
-import { oldQueueState, queueIdState } from "@/atoms/queueAtoms";
-import { seekerState } from "@/atoms/seekerAtoms";
-import { durationState } from "@/atoms/durationAtoms";
-import { millisToMinutesAndSeconds } from "@/lib/time";
-import { useRouter } from "next/router";
-import { shuffle } from "lodash";
 
 function Player() {
   const router = useRouter();
@@ -39,7 +38,6 @@ function Player() {
   const [volume, setVolume] = useRecoilState(volumeState);
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [oldQueue, setOldQueue] = useRecoilState(oldQueueState);
-
   const [seeker, setSeeker] = useRecoilState(seekerState);
   const [duration, setDuration] = useRecoilState(durationState);
   const songInfo = useSongInfo();
@@ -71,9 +69,11 @@ function Player() {
           // console.log(data.body);
           spotifyApi.pause();
           setIsPlaying(false);
+          setSeeker(data?.body?.duration_ms);
         } else {
           spotifyApi.play();
           setIsPlaying(true);
+          setSeeker(data?.body?.duration_ms);
         }
       });
     }
@@ -98,11 +98,11 @@ function Player() {
         index = i;
       }
     });
-    if (index + 1 > queue.length) {
+    if (index + 1 >= queue.length) {
       setCurrentTrackId(queue[0]?.track?.id ?? queue[0].id);
       setDuration(queue[0]?.track?.duration_ms ?? queue[0].duration_ms);
-      spotifyApi.pause();
-      setIsPlaying(false);
+      playSong(queue[0]?.track?.id ?? queue[0].id);
+      setIsPlaying(true);
     } else {
       setCurrentTrackId(queue[index + 1]?.track?.id ?? queue[index + 1].id);
       setDuration(
@@ -125,8 +125,8 @@ function Player() {
     if (index - 1 < 0) {
       setCurrentTrackId(queue[0]?.track?.id ?? queue[0].id);
       setDuration(queue[0]?.track?.duration_ms ?? queue[0].duration_ms);
-      spotifyApi.pause();
-      setIsPlaying(false);
+      playSong(queue[0]?.track?.id ?? queue[0].id);
+      setIsPlaying(true);
     } else {
       setCurrentTrackId(queue[index - 1]?.track?.id ?? queue[index - 1].id);
       setDuration(
@@ -168,8 +168,7 @@ function Player() {
       spotifyApi
         .getMyCurrentPlaybackState()
         .then((data) => {
-          // console.log(data.body);
-          setSeeker(millisToMinutesAndSeconds(data.body?.progress_ms));
+          setSeeker(data.body?.progress_ms);
         })
         .catch((err) => console.error("Can't seek: ", err));
     }
@@ -209,7 +208,7 @@ function Player() {
     }
   };
 
-  console.log("SHUFFLE QUUEUEUE", queue);
+  console.log("SHUFFLE QUUEUEUE", seeker);
   return (
     <div
       className="h-24 select-none hidden bg-gradient-to-b from-slate-800 to-black text-white
@@ -269,8 +268,8 @@ function Player() {
         </div>
         <div className="flex flex-col py-3">
           <input
-            // className=" w-full h-1 bg-green-400 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
-            className="::-webkit-slider-thumb ::-webkit-slider-runnable-track w-full h-1 bg-green-400 rounded-lg cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
+            className=" w-full h-1 bg-green-400 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
+            // className="::-webkit-slider-thumb ::-webkit-slider-runnable-track w-full h-1 bg-green-400 rounded-lg cursor-pointer range-sm dark:bg-gray-700 hover:bg-white"
             type="range"
             value={seeker}
             onChange={(e) => {

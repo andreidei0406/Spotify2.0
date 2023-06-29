@@ -39,13 +39,13 @@ function CenterPlaylist() {
   }, [router.query.id]);
 
   useEffect(() => {
-    if(spotifyApi.getAccessToken()){
+    if (spotifyApi.getAccessToken()) {
       spotifyApi
-      .getPlaylist(router.query.id, { limit: 50, offset: 5 })
-      .then((data) => {
-        setPlaylist(data?.body);
-      })
-      .catch((err) => console.log("Something went wrong!", err));
+        .getPlaylist(router.query.id, { limit: 50, offset: 5 })
+        .then((data) => {
+          setPlaylist(data?.body);
+        })
+        .catch((err) => console.log("Something went wrong!", err));
     }
   }, [spotifyApi, session, router.query.id]);
 
@@ -54,29 +54,29 @@ function CenterPlaylist() {
   const [className, setClassName] = useState(
     "xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl hover:opacity-70 cursor-pointer"
   );
-  // const uploadImage = () => {
-  //   var input = document.createElement("input");
-  //   input.type = "file";
+  const uploadImage = () => {
+    var input = document.createElement("input");
+    input.type = "file";
 
-  //   input.onchange = (e) => {
-  //     // getting a hold of the file reference
-  //     var file = e.target.files[0];
+    input.onchange = (e) => {
+      // getting a hold of the file reference
+      var file = e.target.files[0];
 
-  //     // setting up the reader
-  //     var reader = new FileReader();
+      // setting up the reader
+      var reader = new FileReader();
 
-  //     reader.onload = (readerEvent) => {
-  //       var content = readerEvent.target.result; // this is the content!
-  //       document.querySelector("#image_input").src = `url(${content})`;
-  //       document.querySelector("#image_input").className = className;
-  //     };
+      reader.onload = (readerEvent) => {
+        var content = readerEvent.target.result; // this is the content!
+        document.querySelector("#image_input").src = `url(${content})`;
+        document.querySelector("#image_input").className = className;
+      };
 
-  //     reader.readAsDataURL(file); // this is reading as data url
+      reader.readAsDataURL(file); // this is reading as data url
 
-  //     // here we tell the reader what to do when it's done reading...
-  //   };
-  //   input.click();
-  // };
+      // here we tell the reader what to do when it's done reading...
+    };
+    input.click();
+  };
 
   const savePlaylistInfo = () => {
     spotifyApi
@@ -119,68 +119,30 @@ function CenterPlaylist() {
         </div>
       </header>
 
-      {router.query.custom === "true" ? (
-        <section
-          className={`flex items-end space-x-7 bg-gradient-to-b to-slate-500
+      <section
+        className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
          ${color} h-80 text-white p-8`}
-        >
-          <img
-            className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl hover:opacity-70 cursor-pointer"
-            src="https://www.lifewire.com/thmb/tHjH9M19MsA9gFY-qcZvKYv5oG4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cloud-upload-a30f385a928e44e199a62210d578375a.jpg"
-            alt=""
-            id="image_input"
-            // onClick={uploadImage}
-          />
-
-          <div className="hidden xs:block">
-            <p>PLAYLIST</p>
-            <input
-              className="flex p-4 text-sm text-white border bg-gray-700 border-gray-600 placeholder-gray-400 rounded-2xl focus:ring-green-500 focus:border-green-500"
-              placeholder="Give it a name!"
-              type="text"
-              onChange={(e) => {
-                setPlaylistName(e.target.value);
-              }}
-              value={playlistName}
-            />
-            <button
-              className="items-center  hover:text-white"
-              onClick={savePlaylistInfo}
-            >
-              <CheckCircleIcon className="button py-2 w-12 h-12" />
-            </button>
-          </div>
-        </section>
-      ) : (
-        <section
-          className={`flex items-end space-x-7 bg-gradient-to-b to-slate-800
-         ${color} h-80 text-white p-8`}
-        >
-          <img
-            className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl"
-            src={playlist?.images?.[0]?.url}
-            alt=""
-          />
-          <div className="hidden xs:block space-y-2">
-            <p>PLAYLIST</p>
-            <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
-              {playlist?.name}
-            </h1>
-            <p>{playlist?.description}</p>
-          </div>
-        </section>
-      )}
+      >
+        <img
+          className="xxs:w-36 xxs:h-36 xs:w-44 xs:h-44 shadow-2xl"
+          src={playlist?.images?.[0]?.url}
+          alt=""
+        />
+        <div className="hidden xs:block space-y-2">
+          <p>PLAYLIST</p>
+          <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
+            {playlist?.name}
+          </h1>
+          <p>{playlist?.description}</p>
+        </div>
+      </section>
       <div>
-        <Songs songs={playlist?.tracks?.items} isAlbum={false} useHeigthScreen={'h-screen'} />
+        <Songs
+          songs={playlist?.tracks?.items}
+          isAlbum={false}
+          useHeigthScreen={"h-screen"}
+        />
       </div>
-      {/* {router.query.custom === "false"  ?
-  (
-      
-    
-  ) : (
-    <button>Click here to add Songs</button>
-  )
-} */}
     </div>
   );
 }
