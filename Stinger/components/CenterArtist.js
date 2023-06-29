@@ -66,7 +66,7 @@ function CenterArtist() {
   console.log(artist);
 
   return (
-    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
+    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide select-none">
       <header className="relative">
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 

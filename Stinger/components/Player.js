@@ -3,6 +3,7 @@ import {
   isPlayingState,
   isRepeatState,
   isShuffleState,
+  volumeState,
 } from "@/atoms/songAtom";
 import useSongInfo from "@/hooks/useSongInfo";
 import useSpotify from "@/hooks/useSpotify";
@@ -35,7 +36,7 @@ function Player() {
     useRecoilState(currentTrackIdState);
 
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useRecoilState(volumeState);
   const [queue, setQueue] = useRecoilState(queueIdState);
   const [oldQueue, setOldQueue] = useRecoilState(oldQueueState);
 
@@ -147,7 +148,7 @@ function Player() {
       fetchCurrentSong();
       setVolume(50);
     }
-  }, [session]);
+  }, [session, spotifyApi]);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && volume > 0 && volume < 100) {

@@ -32,8 +32,6 @@ function CenterCategory() {
   const [color, setColor] = useState(null);
   const [category, setCategory] = useState(null);
   const [playlists, setPlaylists] = useState([]);
-  const [artists, setArtists] = useState(null);
-  const [album, setAlbum] = useState(null);
 
   useEffect(() => {
     setColor(shuffle(colors).pop());
@@ -62,7 +60,7 @@ function CenterCategory() {
   console.log(playlists);
 
   return (
-    <div className="flex-grow bg-slate-800 h-screen overflow-y-scroll scrollbar-hide pb-36">
+    <div className="flex-grow bg-slate-800 h-screen overflow-y-scroll scrollbar-hide pb-36 select-none">
       <header className="relative">
         <div
           className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 

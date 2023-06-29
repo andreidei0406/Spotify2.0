@@ -92,25 +92,7 @@ function GameArtist() {
   };
 
   return (
-    <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="relative">
-        <div
-          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
-        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
-          onClick={() => {
-            spotifyApi.pause();
-            signOut;
-          }}
-        >
-          <img
-            className="rounded-full w-10 h-10"
-            src={session?.user.image}
-            alt=""
-          />
-          <h2>Log out</h2>
-          <LogoutIcon className="h-5 w-5" />
-        </div>
-      </header>
+    <div className="bg-slate-800 flex-grow h-screen select-none overflow-y-scroll scrollbar-hide">
       <header className="relative top-5 left-8">
         <div
           className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 

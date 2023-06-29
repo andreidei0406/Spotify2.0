@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
+import { useEffect } from "react";
 import { RecoilRoot } from "recoil";
 
 export default function App({
@@ -9,7 +10,7 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
-        <Component {...pageProps} />
+        <Component {...pageProps}/>
       </RecoilRoot>
     </SessionProvider>
   );

@@ -89,12 +89,12 @@ function GameComponent() {
       {router.query.winner === undefined ? (
         <section
           className={`grid place-items-center space-x-7 bg-gradient-to-b to-slate-800
-             ${color} h-screen text-white p-8`}
+             ${color} h-screen text-white p-8 select-none`}
         >
           {router.query.album === "true" ? (
             <div className="grid grid-cols-1 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
@@ -109,7 +109,7 @@ function GameComponent() {
           ) : (
             <div className="grid grid-cols-2 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
@@ -121,7 +121,7 @@ function GameComponent() {
                 <UserIcon />
               </div>
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
@@ -147,7 +147,7 @@ function GameComponent() {
           {router.query.album === "true" ? (
             <div className="grid grid-cols-1 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
@@ -163,7 +163,7 @@ function GameComponent() {
           ) : (
             <div className="grid grid-cols-2 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
@@ -175,7 +175,7 @@ function GameComponent() {
                 <UserIcon />
               </div>
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
@@ -201,7 +201,7 @@ function GameComponent() {
           {router.query.album === "true" ? (
             <div className="grid grid-cols-1 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",
@@ -216,7 +216,7 @@ function GameComponent() {
           ) : (
             <div className="grid grid-cols-2 gap-60">
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/artist",
@@ -228,7 +228,7 @@ function GameComponent() {
                 <UserIcon />
               </div>
               <div
-                className="text-xs md:text-sm xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
+                className="text-xs md:text-xl xl:text-5xl bg-gray-900 xs:px-3 xs:py-3 hover:bg-gray-700 cursor-pointer rounded-3xl"
                 onClick={() => {
                   router.push({
                     pathname: "game/song",

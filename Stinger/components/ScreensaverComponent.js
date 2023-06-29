@@ -39,22 +39,7 @@ function ScreensaverComponent() {
   console.log(songInfo);
 
   return (
-    <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="relative">
-        <div
-          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
-        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
-          onClick={signOut}
-        >
-          <img
-            className="rounded-full w-10 h-10"
-            src={session?.user.image}
-            alt=""
-          />
-          <h2>Log out</h2>
-          <LogoutIcon className="h-5 w-5" />
-        </div>
-      </header>
+    <div className="bg-slate-800 items-center justify-center flex-grow h-screen overflow-y-scroll scrollbar-hide select-none">
       <header className="relative top-5 left-8">
         <div
           className="absolute hidden xs:flex items-center bg-black space-x-3 opacity-90 
@@ -74,7 +59,7 @@ function ScreensaverComponent() {
         className={`grid grid-cols-1 place-items-center space-x-7 bg-gradient-to-b to-slate-800
              ${color} h-screen text-white p-8`}
       >
-        <div className="grid grid-cols-1 ">
+        <div className="grid grid-cols-1 place-items-center">
           <div className="xs:px-3 xs:py-3 rounded-3xl">
             <img
               className="relative xxs:w-22 xxs:h-22 xs:w-32 xs:h-32 md:w-24 md:h-24 lg:w-40 lg:h-40 xl:w-50 xl:h-50 2xl:w-96 2xl:h-96 shadow-2xl rounded-lg"
@@ -88,7 +73,6 @@ function ScreensaverComponent() {
                 <span className="text-2xl">{artist.name} </span>
             ))}
             <h1 className="text-2xl">Popularity {songInfo?.popularity}%</h1>
-            {/* <h1 className="text-2xl">{songInfo?.name}</h1> */}
           </div>
         </div>
       </section>

@@ -38,7 +38,7 @@ function MiniSidebar() {
     <div
       className="text-gray-500 bg-slate-800 p-5 text-center lg:text-sm border-r border-gray-900 
     overflow-y-scroll scrollbar-hide h-screen w-screen sm:max-w-[5rem]
-    hidden md:inline-flex pb-36"
+    hidden md:inline-flex pb-36 select-none"
     >
       <div className="space-y-4 justify-center">
         <button

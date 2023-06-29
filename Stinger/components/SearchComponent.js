@@ -1,17 +1,15 @@
+import { durationState } from "@/atoms/durationAtoms";
+import { queueIdState } from "@/atoms/queueAtoms";
+import { searchState } from "@/atoms/searchAtom";
+import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
 import useSpotify from "@/hooks/useSpotify";
-import { ChevronDownIcon } from "@heroicons/react/outline";
 import { LogoutIcon, PlayIcon } from "@heroicons/react/solid";
 import { debounce } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import Songs from "./Songs";
 import { useRecoilState } from "recoil";
-import { searchState } from "@/atoms/searchAtom";
-import { currentTrackIdState, isPlayingState } from "@/atoms/songAtom";
-import { queueIdState } from "@/atoms/queueAtoms";
-import { durationState } from "@/atoms/durationAtoms";
-import Song from "./Song";
+import Songs from "./Songs";
 
 function SearchComponent() {
   const [currentTrackId, setCurrentTrackId] =
@@ -67,7 +65,8 @@ function SearchComponent() {
   );
 
   useEffect(() => {
-    if (typeof artists !== undefined && spotifyApi.getAccessToken()) {
+    console.log(artists);
+    if (artists && artists.length !== 0 && spotifyApi.getAccessToken()) {
       spotifyApi
         .getArtistTopTracks(artists?.[0]?.id, "RO")
         .then((data) => {

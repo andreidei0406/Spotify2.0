@@ -16,8 +16,6 @@ import { gameArtistState, gameSongState } from "@/atoms/gameAtom";
 
 function Songs({
   isAlbum,
-  isLiked,
-  isPlaylist,
   songs,
   albumImage,
   ignoreAlbumName,
@@ -28,8 +26,6 @@ function Songs({
 
   const spotifyApi = useSpotify();
   const playlist = useRecoilValue(playlistState);
-  const album = useRecoilValue(albumState);
-  const liked = useRecoilValue(likedState);
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [queue, setQueue] = useRecoilState(queueIdState);
@@ -38,22 +34,19 @@ function Songs({
   const [isLikedByUser, setIsLikedByUser] = useState([]);
   const [songGame, setSongGame] = useRecoilState(gameSongState);
   const [artistGame, setArtistGame] = useRecoilState(gameArtistState);
-
+  console.log(songs);
   const shufflePlay = () => {
     let randomSong = null;
-    random(playlist?.tracks.items.length - 1, false);
-    if (songs.tracks) {
-      randomSong = random(songs.tracks.length - 1, false);
-    } else {
-      randomSong = random(songs.length - 1, false);
-    }
+    console.log(songs);
+    randomSong = random(songs.length - 1, false);
+
     setCurrentTrackId(
-      songs?.tracks?.[randomSong]?.id ?? songs?.[randomSong]?.id
+      songs?.[randomSong]?.track?.id ?? songs?.[randomSong]?.id
     );
     setIsPlaying(true);
-    if (songs.tracks) {
+    if (songs) {
       spotifyApi.play({
-        uris: [songs?.tracks[randomSong].uri],
+        uris: [songs?.[randomSong]?.track?.uri],
       });
     } else {
       spotifyApi.play({
@@ -61,19 +54,10 @@ function Songs({
       });
     }
     const shuffled = [];
-    if (songs.tracks) {
-      songs.tracks.map((item) => {
-        shuffled.push(item);
-      });
-      setQueue(shuffle(songs));
-    } else {
-      songs.map((item) => {
-        shuffled.push(item);
-      });
-      setQueue(shuffle(shuffled));
-    }
-
-    // }
+    songs.map((item) => {
+      shuffled.push(item?.track ?? item);
+    });
+    setQueue(shuffle(shuffled));
   };
 
   const playGame = () => {
@@ -102,7 +86,7 @@ function Songs({
   };
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken() && songs) {
+    if (spotifyApi.getAccessToken() && songs && songs.length !== 0) {
       const ids = [];
       songs?.map((item, i) => {
         if (i < 50) {
@@ -123,14 +107,12 @@ function Songs({
     }
   }, [songs]);
 
-  useEffect(() => {});
-
   console.log(songs);
   return (
     <div
       className={`bg-slate-800 ${
         useHeigthScreen ?? ""
-      } px-8 flex flex-col space-y-1 pb-28 text-white`}
+      } px-8 flex flex-col space-y-1 pb-28 text-white select-none`}
     >
       {ignoreHeader ? (
         <div></div>
@@ -159,7 +141,7 @@ function Songs({
           track={track.track ?? track}
           order={i}
           songs={songs}
-          isLikedByUser={isLikedByUser[i]}
+          isLikedByUser={isLikedByUser[i] ?? false}
           albumImage={
             albumImage ??
             track?.track?.album?.images?.[0]?.url ??

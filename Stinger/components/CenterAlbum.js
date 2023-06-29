@@ -94,7 +94,7 @@ function CenterAlbum() {
       </section>
 
       <div>
-        <Songs songs={album?.tracks.items} albumImage={album?.images?.[0].url} isAlbum={true} useHeigthScreen={'h-screen'}/>
+        <Songs songs={album?.tracks.items} albumImage={album?.images?.[0].url} isAlbum={true} ignoreHeader={album?.total_tracks < 4} />
       </div>
     </div>
   );

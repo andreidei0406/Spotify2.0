@@ -1,13 +1,9 @@
-import { playlistIdState } from "@/atoms/playlistAtoms";
 import useSpotify from "@/hooks/useSpotify";
-import { ChevronDownIcon, LogoutIcon } from "@heroicons/react/solid";
-import { property, random, shuffle } from "lodash";
+import { LogoutIcon } from "@heroicons/react/solid";
+import { random } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { selector, useRecoilState } from "recoil";
-import Song from "./Song";
-import { millisToMinutesAndSeconds } from "@/lib/time";
 import Songs from "./Songs";
 
 const colors = [
@@ -95,11 +91,11 @@ function HomeCenter() {
   }, [spotifyApi]);
 
   return (
-    <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll scrollbar-hide">
-      <header className="absolute top-5 right-8">
+    <div className="bg-slate-800 flex-grow h-screen overflow-y-scroll select-none scrollbar-hide">
+      <header className="relative">
         <div
-          className="hidden sm:inline-flex items-center bg-black space-x-3 opacity-90 
-          hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
+          className="absolute hidden xs:flex top-5 right-8 items-center bg-black space-x-3 opacity-90 
+        hover:opacity-70 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
           <img
@@ -245,8 +241,8 @@ function HomeCenter() {
         </div>
         <section className="">
           <div className="py-5">
-            <Songs songs={topSongs} ignoreHeader={true}/>
-          </div> 
+            <Songs songs={topSongs} ignoreHeader={true} />
+          </div>
         </section>
       </div>
       <section className="flex items-end space-x-7 bg-gradient-to-b  h-80 text-white p-8"></section>
